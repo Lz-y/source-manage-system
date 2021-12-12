@@ -11,7 +11,7 @@ const router = createRouter({
         return savedPosition
       } else {
         const top: number = document.documentElement.scrollTop || document.body.scrollTop
-        resolve({ left: 0, top })
+        resolve({ top })
       }
     })
   }
@@ -19,7 +19,7 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   NProgress.start()
-  document.title = to.meta.title
+  document.title = to.meta.title!
   next()
 })
 

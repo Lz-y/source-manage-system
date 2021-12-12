@@ -1,20 +1,20 @@
 import 'vue-router'
 
 declare module 'vue-router' {
-  export type RouterType = {
+  interface RouterType {
     path?: string
-    name?: string
     noShowingChildren?: boolean
     children?: RouterType[]
-    hidden?: boolean
     meta?: RouteMeta
-    showTooltip?: boolean
+    showTooltip?: boolean,
   }
 
   interface RouteMeta {
-    title: string
+    title?: string
     icon?: string
     isAdmin?: boolean
     auth?: boolean
+    hidden?: boolean
+    breadcrumb?: boolean
   }
 }

@@ -1,4 +1,6 @@
-const routes = [
+import {RouteRecordRaw} from 'vue-router'
+
+const routes: RouteRecordRaw[] = [
   {
     path: '/',
     component: () => import('@/layout/index.vue'),
@@ -8,7 +10,7 @@ const routes = [
         path: 'home',
         name: 'home',
         component: () => import('@/views/home/index.vue'),
-        meta: { title: 'home', icon: 'home', auth: true }
+        meta: { title: '首页', icon: 'home', auth: true }
       }
     ]
   },
@@ -20,7 +22,7 @@ const routes = [
         path: '',
         name: 'user',
         component: () => import('@/views/user/index.vue'),
-        meta: { title: 'user', icon: 'user', auth: true }
+        meta: { title: '用户管理', icon: 'user', auth: true }
       }
     ]
   },
@@ -32,7 +34,7 @@ const routes = [
         path: '',
         name: 'article',
         component: () => import('@/views/article/index.vue'),
-        meta: { title: 'article', icon: 'article', auth: true }
+        meta: { title: '文章管理', icon: 'article', auth: true }
       }
     ]
   },
@@ -44,7 +46,7 @@ const routes = [
         path: '',
         name: 'resource',
         component: () => import('@/views/resource/index.vue'),
-        meta: { title: 'resource', icon: 'resource', auth: true }
+        meta: { title: '资源管理', icon: 'resource', auth: true }
       }
     ]
   },
@@ -56,7 +58,7 @@ const routes = [
         path: '',
         name: 'message',
         component: () => import('@/views/message/index.vue'),
-        meta: { title: 'message', icon: 'message', auth: true }
+        meta: { title: '消息管理', icon: 'message', auth: true }
       }
     ]
   },
@@ -68,7 +70,7 @@ const routes = [
         path: '',
         name: 'page',
         component: () => import('@/views/page/index.vue'),
-        meta: { title: 'page', icon: 'page', auth: true }
+        meta: { title: '页面管理', icon: 'page', auth: true }
       }
     ]
   },
@@ -80,40 +82,46 @@ const routes = [
         path: '',
         name: 'logs',
         component: () => import('@/views/log/index.vue'),
-        meta: { title: 'log', icon: 'log', auth: true }
+        meta: { title: '日志', icon: 'log', auth: true }
       }
     ]
   },
   {
     path: '/setting',
     component: () => import('@/layout/index.vue'),
+    redirect: '/setting/page',
+    meta: {title: '设置'},
     children: [
       {
-        path: '',
-        name: 'setting',
+        path: 'page',
+        name: 'page',
         component: () => import('@/views/setting/index.vue'),
-        meta: { title: 'setting', icon: 'setting', auth: true }
+        meta: { title: '页面设置', icon: 'setting', auth: true }
+      },
+      {
+        path: 'dictionary',
+        name: 'dictionary',
+        component: () => import('@/views/setting/dictionary.vue'),
+        meta: { title: '字典设置', icon: 'dictionary', auth: true }
       },
     ]
   },
   {
     path: '/login',
     name: 'login',
-    hidden: true,
     component: () => import('@/views/login/index.vue'),
-    meta: { title: 'login', icon: 'login' }
+    meta: { title: 'login', icon: 'login', hidden: true, }
   },
   {
     path: '/404',
     name: '404',
-    hidden: true,
     component: () => import('@/views/NotFound/index.vue'),
-    meta: { title: '404', icon: '404' }
+    meta: { title: '404', icon: '404', hidden: true, }
   },
   {
     path: '/:path(.*)*',
     redirect: '/404',
-    hidden: true
+    meta: { hidden: true, },
   }
 ]
 export default routes

@@ -1,10 +1,12 @@
 <template>
+
 </template>
 
-<script lang="ts">
+<script>
 export default {
-  name: 'SettingHome'
+  name: 'DictionarySetting'
 }
 </script>
 <script setup lang="ts">
+
 </script>

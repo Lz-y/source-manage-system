@@ -1,12 +1,12 @@
 <template>
-  <template v-if="hasOneShowingChild(props.data.children, props.data) || !onlyOneChild?.children || onlyOneChild.noShowingChildren">
-    <el-menu-item :index="resolvePath(onlyOneChild?.path)">
+  <template v-if="hasOneShowingChild(props.data.children, props.data) && (!onlyOneChild?.children || onlyOneChild.noShowingChildren)">
+    <el-menu-item :index="resolvePath(onlyOneChild?.path!)">
       <svg-icon :name='onlyOneChild?.meta?.icon' />
-      <span>{{onlyOneChild?.meta?.title}}</span>
+      <span>{{onlyOneChild.meta?.title}}</span>
     </el-menu-item>
   </template>
   <template v-else>
-    <el-sub-menu :index="resolvePath(props.data.path)">
+    <el-sub-menu :index="resolvePath(props.data.path!)">
       <template #title>
         <svg-icon :name='props.data.meta?.icon' />
         <span>{{props.data.meta?.title}}</span>
@@ -16,7 +16,7 @@
         :key="child.path"
         :data='child'
         :is-nest="true"
-        :base-path="resolvePath(child.path)" />
+        :base-path="resolvePath(child.path!)" />
     </el-sub-menu>
   </template>
 </template>
@@ -38,32 +38,30 @@ const props = defineProps({
     type: Boolean,
     default: false
   }
-});
+})
 
-// import path from 'path'
-
-const onlyOneChild = ref<RouterType | null>(null)!
+const onlyOneChild = ref<RouterType>({})
 
 const hasOneShowingChild = (children: RouterType[] = [], parent: RouterType) => {
   const showingChildren = children.filter(item => {
-    if(item.hidden){
-      return false
-    } else {
-      onlyOneChild.value = item
-      return true
-    }
+    onlyOneChild.value = item
+    return true
   })
   if (showingChildren.length === 1) {
     return true
   }
   if (showingChildren.length === 0) {
-    onlyOneChild.value = {...parent, path: "", noShowingChildren: true}
-    return false
+    onlyOneChild.value = {...parent, noShowingChildren: true}
+    return true
   }
   return false
 }
 
-const resolvePath = (route: any) => {
-  return props.basePath + '' + route
+const resolvePath = (routePath: string) => {
+  const httpReg = /https?:\/\//
+  if (httpReg.test(routePath)) {
+    return routePath
+  }
+  return props.isNest ? props.basePath  + '/' + routePath : props.basePath
 }
 </script>

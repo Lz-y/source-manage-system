@@ -2,8 +2,8 @@ import { createApp } from 'vue'
 
 import { createPinia } from 'pinia'
 
-import Element from 'element-plus'
-import 'element-plus/dist/index.css'
+// import Element from 'element-plus'
+// import 'element-plus/dist/index.css'
 
 import 'normalize.css'
 
@@ -19,4 +19,4 @@ const app = createApp(App)
 
 app.component('svg-icon', SvgIcon)
 
-app.use(createPinia()).use(router).use(Element).mount('#app')
+app.use(createPinia()).use(router).mount('#app')

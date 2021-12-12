@@ -1,9 +1,9 @@
 <template>
-  <el-aside width="180px">
+  <el-aside width="210px">
     <el-scrollbar>
       <el-menu
         :default-active="activeRoutes"
-        :unique-opened="true"
+        unique-opened
         router>
         <SideBarItem
           v-for="route in routes"
@@ -15,9 +15,15 @@
   </el-aside>
 </template>
 
+<script lang="ts">
+export default {
+  name: 'Sidebar'
+}
+</script>
+
 <script lang="ts" setup>
 import { computed } from "vue"
-import { RouterType, useRoute, useRouter } from "vue-router"
+import { RouteRecordRaw, useRoute, useRouter } from "vue-router"
 import SideBarItem from './Item.vue'
 
 const route = useRoute()
@@ -33,10 +39,12 @@ const activeRoutes = computed(() => {
 })
 
 const routes = computed(() => {
-  return router.options.routes.filter(item => !item.hidden)
+  function filterRoute (data: RouteRecordRaw[]) {
+    const newrRoute = data.filter(item => !item.meta?.hidden)
+    newrRoute.forEach(item => item.children && (item.children = filterRoute(item.children)))
+    return newrRoute
+  }
+  return filterRoute(router.options.routes)
 })
 </script>
-
-<style lang="scss">
-</style>
  
