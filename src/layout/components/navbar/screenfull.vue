@@ -11,7 +11,7 @@
 
 <script setup lang="ts">
 import {useFullscreen} from '@vueuse/core'
-import {FullScreen} from '@element-plus/icons'
+import {FullScreen} from '@element-plus/icons-vue'
 
 const {isFullscreen, toggle} = useFullscreen()
 </script>

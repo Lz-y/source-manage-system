@@ -31,7 +31,7 @@
 <script setup lang="ts">
 import { ref } from 'vue-demi'
 
-import {Bell} from '@element-plus/icons'
+import {Bell} from '@element-plus/icons-vue'
 
 
 export interface ListItem {

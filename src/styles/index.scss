@@ -1,3 +1,5 @@
+@import './element-plus.scss';
+
 html, body{
   height: 100%;
 }
@@ -22,16 +24,15 @@ html, body{
 .el-menu {
   background-color: transparent;
   height: 100vh;
-}
+  &-item {
+    padding: 0;
+    height: 48px;
+    line-height: 48px;
 
-.el-menu-item {
-  padding: 0;
-  height: 48px;
-  line-height: 48px;
-
-  &.is-active {
-    background: #fff;
-    color: #303030;
+    &.is-active {
+      background: #fff;
+      color: #303030;
+    }
   }
 }
 
@@ -105,10 +106,14 @@ html, body{
     font-size: 18px;
   }
 }
-
-.el-main{
-  padding: 0 !important;
+.el-main {
   .page{
+    background-color: #fff;
     padding: 20px;
+    border-radius: 10px;
+  }
+  .query-wrapper{
+    background-color: #f1f1f1;
+    padding: 0 15px;
   }
 }

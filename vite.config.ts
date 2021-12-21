@@ -2,9 +2,9 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
 import ViteSvgIcons from 'vite-plugin-svg-icons'
-import Components from 'unplugin-vue-components/vite'
-import AutoImport from 'unplugin-vue-components/vite'
-import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
+// import Components from 'unplugin-vue-components/vite'
+// import AutoImport from 'unplugin-vue-components/vite'
+// import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 
 import { resolve } from 'path'
 
@@ -12,7 +12,7 @@ import { resolve } from 'path'
 export default defineConfig({
   server: {
     port: 9000,
-    host: '127.0.0.1',
+    host: '0.0.0.0',
     open: true
   },
   resolve: {
@@ -28,11 +28,11 @@ export default defineConfig({
       iconDirs: [resolve(process.cwd(), 'src/icons')],
       symbolId: 'icon-[name]'
     }),
-    AutoImport({
-      resolvers: [ElementPlusResolver()]
-    }),
-    Components({
-      resolvers: [ElementPlusResolver()],
-    }),
+    // AutoImport({
+    //   resolvers: [ElementPlusResolver()]
+    // }),
+    // Components({
+    //   resolvers: [ElementPlusResolver()],
+    // }),
   ]
 })

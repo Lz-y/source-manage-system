@@ -1,17 +1,36 @@
 <template>
   <el-table v-bind='$attrs'>
-    <ColumnItem v-for="column in columns" :item='column' />
+    <Columns v-for="column in columns" :item='column' :key="column.attrs.prop" />
   </el-table>
 </template>
 
 <script lang="ts">
-export default {
-  name: 'CustomTable'
-}
-</script>
-<script setup lang="ts">
-import ColumnItem, {ColumnProps} from './columnItem.vue'
+import { defineComponent, provide, PropType, getCurrentInstance } from 'vue-demi'
+import Columns from './columns.vue'
 
+export default defineComponent({
+  name: 'CustomTable',
+  props: {
+    columns: {
+      type: Array as PropType<Array<ColumnProps>>,
+      required: true,
+      default: () => []
+    },
+    maxLevel: {
+      type: Number,
+      default: 3
+    }
+  },
+  components: {
+    Columns
+  },
+  setup () {
+    const instance = getCurrentInstance()
 
-defineProps<{columns: Array<ColumnProps>}>()
+    provide('RootTable', instance)
+
+    return {
+    }
+  }
+})
 </script>
