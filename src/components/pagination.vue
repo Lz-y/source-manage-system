@@ -18,27 +18,28 @@ import {defineComponent, ref} from 'vue-demi'
 
 export default defineComponent({
   props: {
-    load: {
-      type: Function,
-      required: true,
-      default: () => {}
+    total: {
+      type: Number,
+      default: 0,
+      required: true
     }
   },
-  setup (props) {
+  emits: ['page-change', 'page-size-change'],
+  setup (props, ctx) {
     const page = ref<number>(1)
     const pageSize = ref<number>(10)
-    const total = ref<number>(0)
     function pageSizeChange (size: number) {
       pageSize.value = size
+      ctx.emit('page-size-change', size)
     }
     function pageChange (p: number) {
       page.value = p
+      ctx.emit('page-change', p)
     }
 
     return {
       page,
       pageSize,
-      total,
       pageSizeChange,
       pageChange
     }

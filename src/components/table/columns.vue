@@ -48,7 +48,7 @@ export default defineComponent({
         {
           ...col.attrs
         },
-        col._slot ? root!.slots[col.attrs.prop!]! :
+        col._slot ? { default: root!.slots[col.attrs.prop!]! } :
         (col._children && level <= (root?.props.maxLevel as number)) ? 
         col._children.map(_ => createCols(_, ++level)) : ''
       )

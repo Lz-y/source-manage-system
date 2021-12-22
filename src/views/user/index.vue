@@ -15,7 +15,7 @@
         <span>444</span>
       </template>
     </CustomTable>
-    <pagination :load="loadData"/>
+    <pagination :total="10" />
   </div>
 </template>
 
@@ -96,5 +96,4 @@ const tableData = ref([
 function loadData () {
   console.log(formData)
 }
-
 </script>

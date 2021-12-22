@@ -9,12 +9,8 @@ declare interface QConfig {
   options?: any[]
   group?: boolean
   type?: 'button'
-  events?: {
-    [k: string]: any
-  }
-  attrs?: {
-    [k: string]: any
-  }
+  events?: AnyTypeObject
+  attrs?: AnyTypeObject
 }
 // table column config props
 declare interface ColumnProps {
@@ -22,7 +18,7 @@ declare interface ColumnProps {
     type?: string
     prop?: string
     label?: string
-  }
+  } & AnyTypeObject
   _children?: Array<ColumnProps>
   _slot?: boolean
 }
