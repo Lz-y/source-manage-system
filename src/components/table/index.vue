@@ -1,6 +1,6 @@
 <template>
   <el-table v-bind='$attrs'>
-    <Columns v-for="column in columns" :item='column' :key="column.attrs.prop" />
+    <Columns v-for="column in columns" :item='column' :key="column.attrs.prop || column.attrs.type" />
   </el-table>
 </template>
 
