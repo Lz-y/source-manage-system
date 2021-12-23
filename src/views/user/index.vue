@@ -1,35 +1,44 @@
 <template>
-  <div class="page-user-manage">
-    <Query :configs="configs" :data="formData" inline></Query>
+  <div class="user-manage-page">
+    <Query :configs="configs" :data="formData" size='small' inline>
+      <el-button type='primary' :icon='Search'>查询</el-button>
+      <el-button type='primary'>导出用户数据</el-button>
+    </Query>
     <CustomTable :columns="columns" :data='tableData'>
-      <template #account>
-        <span>111</span>
+      <template #status='{row}'>
+        <span :class="row.status === 0 ? 'invalid' : 'available'">{{row.status === 0 ? '已失效' : '可用'}}</span>
       </template>
-      <template #nickName='{row, $index}'>
-        <span>222</span>
-      </template>
-      <template #aa>
-        <span>333</span>
-      </template>
-      <template #bb>
-        <span>444</span>
+      <template #operation='{row, $index}'>
+        <el-button type='text' size='small'>{{row.status === 0 ? '禁用' : '启用'}}</el-button>
+        <el-button type='text' size='small'>编辑</el-button>
       </template>
     </CustomTable>
     <pagination :total="10" />
   </div>
 </template>
 
+<script lang="ts">
+export default {
+  name: 'UserManagePage'
+}
+</script>
 <script setup lang="ts">
 import { reactive, ref } from 'vue-demi'
+import { Search } from '@element-plus/icons-vue'
 
 import Query from '@/components/query.vue'
 import CustomTable from '@/components/table/index.vue'
 import pagination from '@/components/pagination.vue'
 
 const configs = ref<Array<QConfig>>([
-  { name: 'input', label: '用户昵称', prop: 'name' },
-  { name: 'select', label: '状态', prop: 'status', attrs: {placeholder: '请选择用户状态'},
-    options: [{label: '全部', value: 0}, {label: '已启用', value: 1}, {label: '已禁用', value: 2}]
+  {
+    name: 'input', label: '用户昵称', prop: 'name',
+    attrs: {placeholder: '请输入用户账号或昵称', clearable: true}
+  },
+  {
+    name: 'select', label: '状态', prop: 'status',
+    attrs: {placeholder: '请选择用户状态', clearable: true},
+    options: [{label: '已启用', value: 1}, {label: '已禁用', value: 2}]
   }
 ])
 
@@ -60,12 +69,6 @@ const columns = ref<Array<ColumnProps>>([
   },
   {
     attrs: {
-      prop: 'age',
-      label: '年龄',
-    }
-  },
-  {
-    attrs: {
       prop: 'avatar',
       label: '头像'
     }
@@ -74,13 +77,15 @@ const columns = ref<Array<ColumnProps>>([
     attrs: {
       prop: 'status',
       label: '状态'
-    }
+    },
+    _slot: true
   },
   {
     attrs: {
       prop: 'operation',
       label: '操作'
-    }
+    },
+    _slot: true
   }
 ])
 
@@ -90,7 +95,16 @@ const formData = reactive({
 })
 
 const tableData = ref([
-  {account: 11111, nickName: 'lan', age: 23, gender: 'm', avatar: '6666'}
+  {account: 11111, nickName: 'lan', age: 23, gender: 'm', avatar: '6666', email: '1111', status: 0},
+  {account: 11111, nickName: 'lan', age: 23, gender: 'm', avatar: '6666', email: '1111', status: 1},
+  {account: 11111, nickName: 'lan', age: 23, gender: 'm', avatar: '6666', email: '1111', status: 0},
+  {account: 11111, nickName: 'lan', age: 23, gender: 'm', avatar: '6666', email: '1111', status: 1},
+  {account: 11111, nickName: 'lan', age: 23, gender: 'm', avatar: '6666', email: '1111', status: 1},
+  {account: 11111, nickName: 'lan', age: 23, gender: 'm', avatar: '6666', email: '1111', status: 1},
+  {account: 11111, nickName: 'lan', age: 23, gender: 'm', avatar: '6666', email: '1111', status: 1},
+  {account: 11111, nickName: 'lan', age: 23, gender: 'm', avatar: '6666', email: '1111', status: 0},
+  {account: 11111, nickName: 'lan', age: 23, gender: 'm', avatar: '6666', email: '1111', status: 0},
+  {account: 11111, nickName: 'lan', age: 23, gender: 'm', avatar: '6666', email: '1111', status: 0},
 ])
 
 function loadData () {

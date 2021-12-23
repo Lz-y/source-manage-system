@@ -1,0 +1,37 @@
+.invalid{
+  color: #ff6c6c;
+  &::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    display: inline-block;
+    background: #ff6c6c;
+    border-radius: 50%;
+    margin-right: 4px;
+  }
+}
+.available{
+  color: #0ac710;
+
+  &::before{
+    content: "";
+    width: 8px;
+    height: 8px;
+    display: inline-block;
+    background: #0ac710;
+    border-radius: 50%;
+    margin-right: 4px;
+  }
+}
+.encrypted{
+  color: #fdbc00;
+  &::before{
+    content: "";
+    width: 8px;
+    height: 8px;
+    display: inline-block;
+    background: #fdbc00;
+    border-radius: 50%;
+    margin-right: 4px;
+  }
+}
