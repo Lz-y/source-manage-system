@@ -1,0 +1,11 @@
+$invalid: #ff6c6c;
+$available: #0ac710;
+$encrypted: #fdbc00;
+$noReply: #d35fff;
+
+:export {
+  invalid: $invalid;
+  available: $available;
+  encrypted: $encrypted;
+  noReply: $noReply;
+}

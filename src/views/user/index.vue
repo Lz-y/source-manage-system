@@ -8,7 +8,7 @@
       <template #status='{row}'>
         <span :class="row.status === 0 ? 'invalid' : 'available'">{{row.status === 0 ? '已失效' : '可用'}}</span>
       </template>
-      <template #operation='{row, $index}'>
+      <template #operation='{row}'>
         <el-button type='text' size='small'>{{row.status === 0 ? '禁用' : '启用'}}</el-button>
         <el-button type='text' size='small'>编辑</el-button>
       </template>
@@ -94,17 +94,17 @@ const formData = reactive({
   status: null
 })
 
-const tableData = ref([
-  {account: 11111, nickName: 'lan', age: 23, gender: 'm', avatar: '6666', email: '1111', status: 0},
-  {account: 11111, nickName: 'lan', age: 23, gender: 'm', avatar: '6666', email: '1111', status: 1},
-  {account: 11111, nickName: 'lan', age: 23, gender: 'm', avatar: '6666', email: '1111', status: 0},
-  {account: 11111, nickName: 'lan', age: 23, gender: 'm', avatar: '6666', email: '1111', status: 1},
-  {account: 11111, nickName: 'lan', age: 23, gender: 'm', avatar: '6666', email: '1111', status: 1},
-  {account: 11111, nickName: 'lan', age: 23, gender: 'm', avatar: '6666', email: '1111', status: 1},
-  {account: 11111, nickName: 'lan', age: 23, gender: 'm', avatar: '6666', email: '1111', status: 1},
-  {account: 11111, nickName: 'lan', age: 23, gender: 'm', avatar: '6666', email: '1111', status: 0},
-  {account: 11111, nickName: 'lan', age: 23, gender: 'm', avatar: '6666', email: '1111', status: 0},
-  {account: 11111, nickName: 'lan', age: 23, gender: 'm', avatar: '6666', email: '1111', status: 0},
+const tableData = ref<Array<User>>([
+  {account: '', nickName: 'lan', avatar: '6666', email: '1111', status: 0},
+  {account: '', nickName: 'lan', avatar: '6666', email: '1111', status: 1},
+  {account: '', nickName: 'lan', avatar: '6666', email: '1111', status: 0},
+  {account: '', nickName: 'lan', avatar: '6666', email: '1111', status: 1},
+  {account: '', nickName: 'lan', avatar: '6666', email: '1111', status: 1},
+  {account: '', nickName: 'lan', avatar: '6666', email: '1111', status: 1},
+  {account: '', nickName: 'lan', avatar: '6666', email: '1111', status: 1},
+  {account: '', nickName: 'lan', avatar: '6666', email: '1111', status: 0},
+  {account: '', nickName: 'lan', avatar: '6666', email: '1111', status: 0},
+  {account: '', nickName: 'lan', avatar: '6666', email: '1111', status: 0},
 ])
 
 function loadData () {

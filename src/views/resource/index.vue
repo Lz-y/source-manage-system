@@ -17,11 +17,18 @@
         <span :class="row.status === 0 ? 'invalid' : 'available'">{{row.status === 0 ? '已失效' : '可用'}}</span>
       </template>
       <template #operation='{row}'>
-        <el-button type='text' @click="toggleEncrypt(row)">{{row.encrypt === 0 ? '加密' : '公开'}}</el-button>
+        <el-button type='text' @click="showEncryptDislog">{{row.encrypt === 0 ? '加密' : '公开'}}</el-button>
         <el-button type='text' @click="toggleStatus(row)">{{row.status === 0 ? '恢复正常' : '失效'}}</el-button>
       </template>
     </CustomTable>
     <Pagination :total='20' />
+    <el-dialog v-model='visible' title="请输入文件密码" width="20%">
+      <Query :configs='encryptConfig' :data='encryptForm' :rules='rules'></Query>
+      <template #footer>
+        <el-button size='small' @click="close">关闭</el-button>
+        <el-button size='small' type="primary" @click="confirm">确认</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -32,7 +39,6 @@ export default {
 </script>
 <script setup lang="ts">
 import {ref, reactive} from 'vue-demi'
-import {ElMessageBox} from 'element-plus'
 import { Search } from '@element-plus/icons-vue'
 
 import Query from '@/components/query.vue'
@@ -40,7 +46,7 @@ import CustomTable from '@/components/table/index.vue'
 import Pagination from '@/components/pagination.vue'
 
 const configs = ref<Array<QConfig>>([
-  { name: 'input', prop: 'name', label: '名称', attrs: {placeholder: '请选择资源名称', clearable: true}, },
+  { name: 'input', prop: 'name', label: '名称', attrs: {placeholder: '请输入资源名称', clearable: true}, },
   {
     name: 'select', label: '加密状态', prop: 'encrypt',
     attrs: {placeholder: '请选择资源加密状态', clearable: true},
@@ -67,19 +73,38 @@ const columns = ref<Array<ColumnProps>>([
   { attrs: { prop: 'status', label: '资源状态' }, _slot: true},
   { attrs: { prop: 'operation', label: '操作', width: 120 }, _slot: true },
 ])
-const list = ref([
+const list = ref<Array<ResourceFile>>([
   {name: '111', img: '111', url: '111', description: '111', status: 0, encrypt: 0}
 ])
-
-async function toggleEncrypt (row: any) {
-  try {
-    ElMessageBox.prompt('请输入密码', '提示', {
-      
-    })
-  } catch (error) {
-    
+const visible = ref<boolean>(false)
+const encryptConfig = ref<Array<QConfig>>([
+  {name: 'input', prop: 'encrypt', attrs: {type: 'password', showPassword: true, placeholder: '请输入文件加密密码'}}
+])
+const encryptForm = reactive({
+  encrypt: null
+})
+const rules = reactive({
+  encrypt: [
+    {required: true, message: '请输入文件加密密码', trigger: 'blur'},
+    {validator: validatorPsw, trigger: ['change', 'blur']},
+  ]
+})
+function validatorPsw (rule: any, value: string, callback: Function) {
+  if (!/^[a-zA-Z0-9\.@#]{4,8}$/g.test(value)) {
+    callback(new Error('仅能输入4-8位大小写字母、数字和.#@'))
+  } else {
+    callback()
   }
 }
+function showEncryptDislog (row: any) {
+  visible.value = true
+}
 function toggleStatus (row: any) {
+}
+function close () {
+  visible.value = false
+}
+function confirm () {
+  visible.value = false
 }
 </script>
