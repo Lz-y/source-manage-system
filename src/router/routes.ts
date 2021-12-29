@@ -29,12 +29,20 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/article',
     component: () => import('@/layout/index.vue'),
+    redirect: '/article',
+    meta: {title: '文章管理'},
     children: [
       {
         path: '',
         name: 'article',
         component: () => import('@/views/article/index.vue'),
-        meta: { title: '文章管理', icon: 'article', auth: true }
+        meta: { title: 'blog/笔记/日记', icon: 'article', auth: true }
+      },
+      {
+        path: 'add',
+        name: 'add',
+        component: () => import('@/views/article/add.vue'),
+        meta: { title: '添加', icon: '', auth: true }
       }
     ]
   },
@@ -63,14 +71,14 @@ const routes: RouteRecordRaw[] = [
     ]
   },
   {
-    path: '/page',
+    path: '/project',
     component: () => import('@/layout/index.vue'),
     children: [
       {
         path: '',
-        name: 'page',
-        component: () => import('@/views/page/index.vue'),
-        meta: { title: '页面管理', icon: 'page', auth: true }
+        name: 'project',
+        component: () => import('@/views/project/index.vue'),
+        meta: { title: '项目管理', icon: 'project', auth: true }
       }
     ]
   },
@@ -82,7 +90,7 @@ const routes: RouteRecordRaw[] = [
         path: '',
         name: 'logs',
         component: () => import('@/views/log/index.vue'),
-        meta: { title: '日志', icon: 'log', auth: true }
+        meta: { title: '日志管理', icon: 'log', auth: true }
       }
     ]
   },
@@ -90,7 +98,7 @@ const routes: RouteRecordRaw[] = [
     path: '/setting',
     component: () => import('@/layout/index.vue'),
     redirect: '/setting/page',
-    meta: {title: '设置'},
+    meta: {title: '系统设置'},
     children: [
       {
         path: 'page',

@@ -9,7 +9,16 @@
         <span :class="row.status === 0 ? 'invalid' : 'available'">{{row.status === 0 ? '已失效' : '可用'}}</span>
       </template>
       <template #operation='{row}'>
-        <el-button type='text' size='small'>{{row.status === 0 ? '禁用' : '启用'}}</el-button>
+        <el-popconfirm confirm-button-text='确认'
+          cancel-button-text='取消'
+          :icon='InfoFilled'
+          icon-color='#fdbc00'
+          :title="`确定${row.status === 0 ? '启用' : '禁用'}该用户？`"
+          @confirm='toggleStatus(row)'>
+          <template #reference>
+            <el-button type='text' size='small'>{{row.status === 0 ? '启用' : '禁用'}}</el-button>
+          </template>
+        </el-popconfirm>
         <el-button type='text' size='small'>编辑</el-button>
       </template>
     </CustomTable>
@@ -24,7 +33,7 @@ export default {
 </script>
 <script setup lang="ts">
 import { reactive, ref } from 'vue-demi'
-import { Search } from '@element-plus/icons-vue'
+import { Search, InfoFilled } from '@element-plus/icons-vue'
 
 import Query from '@/components/query.vue'
 import CustomTable from '@/components/table/index.vue'
@@ -106,6 +115,10 @@ const tableData = ref<Array<User>>([
   {account: '', nickName: 'lan', avatar: '6666', email: '1111', status: 0},
   {account: '', nickName: 'lan', avatar: '6666', email: '1111', status: 0},
 ])
+
+function toggleStatus (row: User) {
+  row.status = row.status === 0 ? 1 : 0
+}
 
 function loadData () {
   console.log(formData)

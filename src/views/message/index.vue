@@ -12,7 +12,16 @@
       </template>
       <template #operation='{row}'>
         <el-button type='text' v-if="row.isReply === 0">回复</el-button>
-        <el-button type='text' @click="toggleStatus(row)">{{row.status === 0 ? '恢复正常' : '失效'}}</el-button>
+        <el-popconfirm confirm-button-text='确认'
+          cancel-button-text='取消'
+          :icon='InfoFilled'
+          icon-color='#fdbc00'
+          :title="`确定使该消息${row.status === 0 ? '恢复正常' : '失效'}？`"
+          @confirm='toggleStatus(row)'>
+          <template #reference>
+            <el-button type='text'>{{row.status === 0 ? '恢复正常' : '失效'}}</el-button>
+          </template>
+        </el-popconfirm>
       </template>
     </CustomTable>
     <Pagination :total='20' />
@@ -26,7 +35,7 @@ export default {
 </script>
 <script setup lang="ts">
 import {ref, reactive} from 'vue-demi'
-import { Search } from '@element-plus/icons-vue'
+import { Search, InfoFilled } from '@element-plus/icons-vue'
 
 import Query from '@/components/query.vue'
 import CustomTable from '@/components/table/index.vue'
@@ -70,12 +79,11 @@ const list = ref<Array<Message>>([
   {title: '111', message: '111', time: '2021-12-24 00:37:10', isReply: 1, status: 1},
   {title: '111', message: '111', time: '2021-12-24 00:37:10', isReply: 0, status: 0},
   {title: '111', message: '111', time: '2021-12-24 00:37:10', isReply: 0, status: 1},
-  {title: '111', message: '111', time: '2021-12-24 00:37:10', isReply: 1, status: 0},
-  {title: '111', message: '111', time: '2021-12-24 00:37:10', isReply: 1, status: 1},
 ])
 
 function toggleEncrypt (row: any) {
 }
-function toggleStatus (row: any) {
+function toggleStatus (row: Message) {
+  row.status = row.status === 0 ? 1 : 0
 }
 </script>

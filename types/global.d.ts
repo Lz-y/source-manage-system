@@ -39,9 +39,10 @@ declare interface User {
 }
 
 declare interface Article {
-  url?: ''
-  title: ''
-  classify: Array<string>
+  url?: string
+  title: string
+  classify: string
+  tags: Array<string>
   createTime: string
   pv: number
   commentary: number
@@ -53,6 +54,7 @@ declare interface ResourceFile {
   name: string
   img?: string
   url: string
+  classify: string
   description: string
   status: 0 | 1
   encrypt: 0 | 1
@@ -73,5 +75,15 @@ declare interface Logs {
   ip: string
   url: string
   time: string
-  status: number
+  code: 200 | 301 | 302 | 304 | 401 | 403 | 404 | 500 | 502
+  status: 0 | 1
+}
+
+declare interface Project{
+  name: string
+  img?: string
+  description: string
+  createTime: string
+  runingTime: string
+  runing: 0 | 1
 }
