@@ -29,7 +29,7 @@ function getBreadcrumbs () {
   const matched = route.matched.filter(item => item.meta && item.meta.title)
   const first = matched[0]
   if (!isHome(first)) {
-    matched.unshift({path: '/home', meta: {title: '首页'}} as unknown as RouteLocationMatched)
+    matched.unshift({path: '/home', meta: {title: '首页', icon: 'dashboard'}} as unknown as RouteLocationMatched)
   }
   levelList.value = matched.filter(item => item.meta && item.meta.title && item.meta?.breadcrumb !== false)
 }

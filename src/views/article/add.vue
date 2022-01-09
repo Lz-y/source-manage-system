@@ -1,8 +1,9 @@
 <template>
   <div class="add-article-page">
-    add
+    <MarkdownEditor />
   </div>
 </template>
 
 <script setup lang="ts">
+import MarkdownEditor from '@/components/editor/index.vue'
 </script>

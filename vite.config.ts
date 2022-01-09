@@ -26,7 +26,7 @@ export default defineConfig({
     vue(),
     ViteSvgIcons({
       iconDirs: [resolve(process.cwd(), 'src/icons')],
-      symbolId: 'icon-[name]'
+      symbolId: 'icon-[dir]-[name]'
     }),
     // AutoImport({
     //   resolvers: [ElementPlusResolver()]

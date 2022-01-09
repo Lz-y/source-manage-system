@@ -10,6 +10,9 @@
   "dependencies": {
     "axios": "^0.24.0",
     "element-plus": "^1.2.0-beta.6",
+    "highlight.js": "^11.3.1",
+    "lodash": "^4.17.21",
+    "markdown-it": "^12.3.0",
     "normalize.css": "^8.0.1",
     "nprogress": "^0.2.0",
     "path": "^0.12.7",
@@ -18,6 +21,8 @@
     "vue-router": "^4.0.12"
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.178",
+    "@types/markdown-it": "^12.2.3",
     "@types/node": "^16.11.6",
     "@types/nprogress": "^0.2.0",
     "@vitejs/plugin-vue": "^1.9.3",
@@ -26,7 +31,7 @@
     "typescript": "^4.4.3",
     "unplugin-vue-components": "^0.17.9",
     "vite": "^2.6.4",
-    "vite-plugin-svg-icons": "^1.0.5",
+    "vite-plugin-svg-icons": "^1.1.0",
     "vue-tsc": "^0.3.0"
   }
 }

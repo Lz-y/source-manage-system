@@ -10,7 +10,7 @@ const routes: RouteRecordRaw[] = [
         path: 'home',
         name: 'home',
         component: () => import('@/views/home/index.vue'),
-        meta: { title: '首页', icon: 'home', auth: true }
+        meta: { title: '首页', icon: 'dashboard', auth: true }
       }
     ]
   },
@@ -30,19 +30,19 @@ const routes: RouteRecordRaw[] = [
     path: '/article',
     component: () => import('@/layout/index.vue'),
     redirect: '/article',
-    meta: {title: '文章管理'},
+    meta: {title: '文章管理', icon: 'article'},
     children: [
       {
         path: '',
         name: 'article',
         component: () => import('@/views/article/index.vue'),
-        meta: { title: 'blog/笔记/日记', icon: 'article', auth: true }
+        meta: { title: 'blog/笔记/日记', icon: 'note', auth: true }
       },
       {
-        path: 'add',
-        name: 'add',
+        path: 'write',
+        name: 'write',
         component: () => import('@/views/article/add.vue'),
-        meta: { title: '添加', icon: '', auth: true }
+        meta: { title: '写文章', icon: 'write', auth: true }
       }
     ]
   },
@@ -90,7 +90,7 @@ const routes: RouteRecordRaw[] = [
         path: '',
         name: 'logs',
         component: () => import('@/views/log/index.vue'),
-        meta: { title: '日志管理', icon: 'log', auth: true }
+        meta: { title: '日志管理', icon: 'logs', auth: true }
       }
     ]
   },
@@ -98,12 +98,18 @@ const routes: RouteRecordRaw[] = [
     path: '/setting',
     component: () => import('@/layout/index.vue'),
     redirect: '/setting/page',
-    meta: {title: '系统设置'},
+    meta: {title: '系统设置', icon: 'setting'},
     children: [
+      {
+        path: 'system',
+        name: 'system',
+        component: () => import('@/views/setting/index.vue'),
+        meta: { title: '系统设置', icon: 'system', auth: true }
+      },
       {
         path: 'page',
         name: 'page',
-        component: () => import('@/views/setting/index.vue'),
+        component: () => import('@/views/setting/pageSetting.vue'),
         meta: { title: '页面设置', icon: 'setting', auth: true }
       },
       {

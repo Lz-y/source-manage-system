@@ -11,16 +11,6 @@
       <template #operation='{row}'>
         <el-button type='text' @click="editDict(row)">编辑</el-button>
         <el-button type='text'>配置</el-button>
-        <el-popconfirm confirm-button-text='确认'
-          cancel-button-text='取消'
-          :icon='InfoFilled'
-          icon-color='#fdbc00'
-          title="确认删除该字典？"
-          @confirm='deleteDict(row)'>
-          <template #reference>
-            <el-button type='text'>删除</el-button>
-          </template>
-        </el-popconfirm>
       </template>
     </CustomTable>
     <Pagination :total='0' />

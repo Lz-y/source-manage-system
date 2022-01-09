@@ -15,7 +15,7 @@ declare interface QConfig {
 // table column config props
 declare interface ColumnProps {
   attrs: {
-    type?: string
+    type?: 'index' | 'selection' | 'expand'
     prop?: string
     label?: string
   } & AnyTypeObject

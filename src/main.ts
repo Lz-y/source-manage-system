@@ -7,6 +7,8 @@ import 'element-plus/dist/index.css'
 
 import 'normalize.css'
 
+import 'virtual:svg-icons-register'
+
 import router from './router/index'
 
 import '@/styles/index.scss'
