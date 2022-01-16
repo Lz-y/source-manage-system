@@ -25,7 +25,12 @@ html, body{
 
 .el-menu {
   background-color: transparent;
+  border-right: none;
   // height: 100vh;
+  .menu-item{
+    text-decoration: none;
+    color: #303133;
+  }
   &-item {
     padding: 0;
     height: 48px;

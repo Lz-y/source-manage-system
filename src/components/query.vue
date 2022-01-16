@@ -1,6 +1,6 @@
 <template>
   <div class="query-wrapper">
-    <el-form v-bind='$attrs' :model='data'>
+    <el-form v-bind='$attrs' ref="form$" :model='data'>
       <el-form-item v-for="item in configs" :label='item.label' :prop='item.prop'>
         <template v-if="item.name === 'select'">
           <component
@@ -50,6 +50,8 @@
 </template>
 
 <script lang="ts">
+import { ref } from 'vue-demi'
+
 export default {
   inheritAttrs: false
 }
@@ -60,4 +62,9 @@ defineProps<{
   configs: QConfig[],
   data: any
 }>()
+const form$ = ref()
+
+function resetFields () {
+  form$.value!.resetFields()
+}
 </script>

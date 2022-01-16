@@ -115,6 +115,7 @@ export default defineComponent({
      text-align: center;
      display: inline-block;
      cursor: pointer;
+     padding-left: 0.5rem;
    }
 }
 </style>

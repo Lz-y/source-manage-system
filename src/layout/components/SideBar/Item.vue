@@ -1,9 +1,11 @@
 <template>
   <template v-if="hasOneShowingChild(props.data.children, props.data) && (!onlyOneChild?.children || onlyOneChild.noShowingChildren)">
-    <el-menu-item :index="resolvePath(onlyOneChild?.path!)">
-      <svg-icon :name='onlyOneChild?.meta?.icon' />
-      <span>{{onlyOneChild.meta?.title}}</span>
-    </el-menu-item>
+    <router-link class="menu-item" :to="resolvePath(onlyOneChild?.path!)">
+      <el-menu-item :index="resolvePath(onlyOneChild?.path!)">
+        <svg-icon :name='onlyOneChild?.meta?.icon' />
+        <span>{{onlyOneChild.meta?.title}}</span>
+      </el-menu-item>
+    </router-link>
   </template>
   <template v-else>
     <el-sub-menu :index="resolvePath(props.data.path!)">
