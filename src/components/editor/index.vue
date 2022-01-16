@@ -2,14 +2,14 @@
   <div class="editor">
     <Navbar />
     <div class="editor-container">
-      <textarea ref="write$" id="write" v-model='originalText' @scroll="handleScroll(1, $event)"></textarea>
+      <textarea ref="write$" id="write" v-model='originalText' placeholder="请输入正文" @scroll="handleScroll(1, $event)"></textarea>
       <div ref="render$" id="render" v-html='parseText' @scroll="handleScroll(2, $event)"></div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, onUnmounted } from "vue-demi"
+import { defineComponent, ref, computed, onMounted,onUnmounted, nextTick } from "vue-demi"
 import MarkdownIt from 'markdown-it'
 import hljs from 'highlight.js'
 import 'highlight.js/styles/github.css'
@@ -82,6 +82,11 @@ export default defineComponent({
       }, 200)
     }
 
+    onMounted(() => {
+      nextTick(() => {
+        write$.value?.focus()
+      })
+    })
     onUnmounted(() => {
       clearTimeout(scrollTimer)
     })

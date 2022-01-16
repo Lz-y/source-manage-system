@@ -41,7 +41,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: 'write',
         name: 'write',
-        component: () => import('@/views/article/add.vue'),
+        component: () => import('@/views/article/write.vue'),
         meta: { title: '写文章', icon: 'write', auth: true }
       }
     ]
@@ -97,14 +97,14 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/setting',
     component: () => import('@/layout/index.vue'),
-    redirect: '/setting/page',
-    meta: {title: '系统设置', icon: 'setting'},
+    redirect: '/setting/dictionary',
+    meta: {title: '系统管理', icon: 'setting'},
     children: [
       {
-        path: 'system',
-        name: 'system',
-        component: () => import('@/views/setting/index.vue'),
-        meta: { title: '系统设置', icon: 'system', auth: true }
+        path: 'dictionary',
+        name: 'dictionary',
+        component: () => import('@/views/setting/dictionary.vue'),
+        meta: { title: '字典设置', icon: 'dictionary', auth: true }
       },
       {
         path: 'page',
@@ -113,10 +113,10 @@ const routes: RouteRecordRaw[] = [
         meta: { title: '页面设置', icon: 'setting', auth: true }
       },
       {
-        path: 'dictionary',
-        name: 'dictionary',
-        component: () => import('@/views/setting/dictionary.vue'),
-        meta: { title: '字典设置', icon: 'dictionary', auth: true }
+        path: 'system',
+        name: 'system',
+        component: () => import('@/views/setting/index.vue'),
+        meta: { title: '系统设置', icon: 'system', auth: true }
       },
     ]
   },
@@ -129,7 +129,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/404',
     name: '404',
-    component: () => import('@/views/NotFound/index.vue'),
+    component: () => import('@/views/notFound/index.vue'),
     meta: { title: '404', icon: '404', hidden: true, }
   },
   {
