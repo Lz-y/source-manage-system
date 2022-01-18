@@ -115,9 +115,10 @@ html, body{
 }
 .el-main {
   .page{
-    background-color: #fff;
-    padding: 20px;
+    // background-color: #fff;
+    // padding: 20px;
     border-radius: 10px;
+    overflow: hidden;
   }
   .query-wrapper{
     // background-color: #f1f1f1;
