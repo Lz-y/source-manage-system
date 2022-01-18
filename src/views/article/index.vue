@@ -20,7 +20,7 @@
         <span :class="row.status === 0 ? 'invalid' : 'available'">{{row.status === 0 ? '已失效' : '可用'}}</span>
       </template>
       <template #operation='{row}'>
-        <el-button type='text' size='small'>{{row.encrypt === 0 ? '加密' : '公开'}}</el-button>
+        <el-button type='text' size='small' @click="showEncryptDislog">{{row.encrypt === 0 ? '加密' : '公开'}}</el-button>
         <el-popconfirm confirm-button-text='确认'
           cancel-button-text='取消'
           :icon='InfoFilled'
@@ -31,10 +31,17 @@
             <el-button type='text' size='small'>{{row.status === 0 ? '启用' : '禁用'}}</el-button>
           </template>
         </el-popconfirm>
-        <el-button type='text' size='small'>编辑</el-button>
+        <el-button type='text' size='small' @click="jumpTo">编辑</el-button>
       </template>
     </CustomTable>
     <pagination :total="10" />
+    <el-dialog v-model='visible' title="请输入文章密码" width="20%">
+      <Query :configs='encryptConfig' :data='encryptForm' :rules='rules'></Query>
+      <template #footer>
+        <el-button size='small' @click="close">关闭</el-button>
+        <el-button size='small' type="primary" @click="confirm">确认</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -50,7 +57,10 @@ import { Search, InfoFilled } from '@element-plus/icons-vue'
 import Query from '@/components/query.vue'
 import CustomTable from '@/components/table/index.vue'
 import pagination from '@/components/pagination.vue'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
+const classifyOptions = [{label: 'blog', value: 0}, {label: '笔记', value: 1}, {label: '日记', value: 2}]
 const configs = ref<Array<QConfig>>([
   {
     name: 'input', label: '标题', prop: 'name',
@@ -59,7 +69,7 @@ const configs = ref<Array<QConfig>>([
   {
     name: 'select', label: '分类', prop: 'classify',
     attrs: {placeholder: '请选择分类', clearable: true},
-    options: [{label: 'blog', value: 0}, {label: '笔记', value: 1}, {label: '日记', value: 2}]
+    options: classifyOptions
   },
   {
     name: 'select', label: '标签', prop: 'tags',
@@ -99,12 +109,43 @@ const formData = reactive({
   encrypt: null,
   status: null
 })
-
+const visible = ref<boolean>(false)
+const encryptConfig = ref<Array<QConfig>>([
+  {name: 'input', prop: 'encrypt', attrs: {type: 'password', showPassword: true, placeholder: '请输入文章密码', tabindex: 1}}
+])
+const encryptForm = reactive({
+  encrypt: null
+})
+const rules = reactive({
+  encrypt: [
+    {required: true, message: '请输入文章密码', trigger: 'blur'},
+    {validator: validatorPsw, trigger: ['change', 'blur']},
+  ]
+})
+function validatorPsw (rule: any, value: string, callback: Function) {
+  if (!/^[a-zA-Z0-9\.@#]{4,8}$/g.test(value)) {
+    callback(new Error('仅能输入4-8位大小写字母、数字和.#@'))
+  } else {
+    callback()
+  }
+}
 const tableData = ref<Array<Article>>([
   {url: '', title: 'Vue3 的使用', classify: 'blog', tags: ['Vue', 'Pinia', 'Vue-Router 4.0'], createTime: '2021-12-22 23:38:45', pv: 100, commentary: 100, encrypt: 0, status: 1},
 ])
 function toggleStatus (row: ResourceFile) {
   row.status = row.status === 0 ? 1 : 0
+}
+function showEncryptDislog () {
+  visible.value = true
+}
+function close () {
+  visible.value = false
+}
+function confirm () {
+  visible.value = false
+}
+function jumpTo () {
+  router.push({name: 'write'})
 }
 </script>
 

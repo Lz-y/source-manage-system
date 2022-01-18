@@ -11,7 +11,7 @@
         <span :class="row.status === 0 ? 'invalid' : 'available'">{{row.status === 0 ? '已失效' : '正常'}}</span>
       </template>
       <template #operation='{row}'>
-        <el-button type='text' v-if="row.isReply === 0">回复</el-button>
+        <el-button type='text' v-if="row.isReply === 0" @click="showReplyDislog">回复</el-button>
         <el-popconfirm confirm-button-text='确认'
           cancel-button-text='取消'
           :icon='InfoFilled'
@@ -25,6 +25,13 @@
       </template>
     </CustomTable>
     <Pagination :total='20' />
+    <el-dialog v-model='visible' title="回复" width="20%" top="25vh">
+      <Query :configs='encryptConfig' :data='encryptForm'></Query>
+      <template #footer>
+        <el-button size='small' @click="close">关闭</el-button>
+        <el-button size='small' type="primary" @click="confirm">发布</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -80,10 +87,25 @@ const list = ref<Array<Message>>([
   {title: '111', message: '111', time: '2021-12-24 00:37:10', isReply: 0, status: 0},
   {title: '111', message: '111', time: '2021-12-24 00:37:10', isReply: 0, status: 1},
 ])
-
+const visible = ref<boolean>(false)
+const encryptConfig = ref<Array<QConfig>>([
+  {name: 'input', prop: 'reply', attrs: {type: 'textarea', autosize: {minRows: 2, maxRows: 6},  placeholder: '请输入回复内容'}}
+])
+const encryptForm = reactive({
+  reply: null
+})
 function toggleEncrypt (row: any) {
 }
 function toggleStatus (row: Message) {
   row.status = row.status === 0 ? 1 : 0
+}
+function showReplyDislog () {
+  visible.value = true
+}
+function close () {
+  visible.value = false
+}
+function confirm () {
+  visible.value = false
 }
 </script>

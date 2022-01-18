@@ -87,3 +87,9 @@ declare interface Project{
   runingTime: string
   runing: 0 | 1
 }
+
+declare interface Dictionary {
+  name: string
+  type: string,
+  children?: Array<Dictionary>
+}
