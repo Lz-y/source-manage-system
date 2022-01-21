@@ -14,7 +14,6 @@
         <svg-icon name="message"></svg-icon>
       </el-col>
     </el-row> -->
-    <Todo></Todo>
     <el-row :gutter="20">
       <el-col :xl="8" :lg="8" :md="12" :sm="24" :xs="24">
         <el-card>
@@ -31,6 +30,14 @@
           <bar-chart />
         </el-card>
       </el-col>
+    </el-row>
+    <el-row :gutter="20">
+      <el-col :span="6">
+        <el-card style='margin-top: 10px;'>
+          <Todo></Todo>
+        </el-card>
+      </el-col>
+      <el-col></el-col>
     </el-row>
   </div>
 </template>

@@ -93,3 +93,8 @@ declare interface Dictionary {
   type: string,
   children?: Array<Dictionary>
 }
+
+declare interface Todo {
+  name: string
+  finished: boolean
+}
