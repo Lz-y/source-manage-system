@@ -98,3 +98,9 @@ declare interface Todo {
   name: string
   finished: boolean
 }
+declare interface Schedule {
+  name: string
+  date: Date
+  description: string
+  finished: 0 | 1 | 2
+}

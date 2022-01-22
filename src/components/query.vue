@@ -1,5 +1,5 @@
 <template>
-  <div class="query-wrapper">
+  <div class="query">
     <el-form v-bind='$attrs' ref="form$" :model='data'>
       <el-form-item v-for="item in configs" :label='item.label' :prop='item.prop'>
         <template v-if="item.name === 'select'">

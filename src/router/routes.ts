@@ -27,6 +27,18 @@ const routes: RouteRecordRaw[] = [
     ]
   },
   {
+    path: '/schedule',
+    component: () => import('@/layout/index.vue'),
+    children: [
+      {
+        path: '',
+        name: 'schedule',
+        component: () => import('@/views/schedule/index.vue'),
+        meta: { title: '计划', icon: 'schedule', auth: true }
+      }
+    ]
+  },
+  {
     path: '/article',
     component: () => import('@/layout/index.vue'),
     redirect: '/article',
@@ -129,7 +141,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/404',
     name: '404',
-    component: () => import('@/views/notFound/index.vue'),
+    component: () => import('@/views/NotFound/index.vue'),
     meta: { title: '404', icon: '404', hidden: true, }
   },
   {
