@@ -17,7 +17,7 @@ const route = useRoute()
 
 const levelList = ref<Array<RouteLocationMatched>>([])
 
-function isHome (route: RouteLocationMatched): boolean | string {
+function isHome (route: RouteLocationMatched): boolean {
   const name = route && (route.name as string)
   if (!name) {
     return false
