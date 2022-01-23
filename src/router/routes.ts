@@ -15,18 +15,6 @@ const routes: RouteRecordRaw[] = [
     ]
   },
   {
-    path: '/user',
-    component: () => import('@/layout/index.vue'),
-    children: [
-      {
-        path: '',
-        name: 'user',
-        component: () => import('@/views/user/index.vue'),
-        meta: { title: '用户管理', icon: 'user', auth: true }
-      }
-    ]
-  },
-  {
     path: '/schedule',
     component: () => import('@/layout/index.vue'),
     children: [
@@ -35,6 +23,18 @@ const routes: RouteRecordRaw[] = [
         name: 'schedule',
         component: () => import('@/views/schedule/index.vue'),
         meta: { title: '计划', icon: 'schedule', auth: true }
+      }
+    ]
+  },
+  {
+    path: '/user',
+    component: () => import('@/layout/index.vue'),
+    children: [
+      {
+        path: '',
+        name: 'user',
+        component: () => import('@/views/user/index.vue'),
+        meta: { title: '用户管理', icon: 'user', auth: true }
       }
     ]
   },
@@ -141,7 +141,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/404',
     name: '404',
-    component: () => import('@/views/NotFound/index.vue'),
+    component: () => import('@/views/notFound/index.vue'),
     meta: { title: '404', icon: '404', hidden: true, }
   },
   {

@@ -56,6 +56,7 @@ export default defineComponent({
 <style lang="scss">
 .todo{
   background-color: #fff;
+  position: relative;
   padding: 10px;
   .title{
     margin-top: 0;
@@ -63,6 +64,7 @@ export default defineComponent({
     color: #5e5e5e;
     font-weight: 500;
     font-size: 1rem;
+    // padding: 10px 0 0 10px;
     // text-align: center;
   }
   &-list{
@@ -141,8 +143,9 @@ export default defineComponent({
   
   .record{
     color: #777;
-    padding: 10px 15px;
+    padding: 8px 15px;
     text-align: center;
+    position: relative;
   }
 }
 </style>
