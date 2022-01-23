@@ -5,9 +5,10 @@
     </Query>
     <CustomTable :columns='columns' :data='list'>
       <template #finished='{row}'>
-        <span :class="row.finished === 0 ? 'invalid' : 'available'">{{row.finished === 0 ? '未完成' : '已完成'}}</span>
+        <span :class="row.finished === 0 ? 'invalid' : 'available'">{{row.finished === 0 ? '进行中' : '已完成'}}</span>
       </template>
       <template #operation='{row}'>
+        <el-button type="text" @click="jumpTo(row)">编辑</el-button>
         <el-popconfirm confirm-button-text='确认'
           cancel-button-text='取消'
           :icon='InfoFilled'
@@ -15,7 +16,7 @@
           :title="`确定该计划${row.finished === 0 ? '已完成' : '未完成'}？`"
           @confirm='toggleStatus(row)'>
           <template #reference>
-            <el-button type='text'>{{row.finished === 0 ? '已完成' : '未完成'}}</el-button>
+            <el-button type='text'>{{row.finished === 0 ? '已完成' : '进行中'}}</el-button>
           </template>
         </el-popconfirm>
         <el-button type="text" @click="remove(row)">删除</el-button>
@@ -28,10 +29,13 @@
 <script setup lang="ts">
 import {ref, reactive} from 'vue-demi'
 import { Search, InfoFilled } from '@element-plus/icons-vue'
+import { useRouter } from 'vue-router'
 
 import Query from '@/components/query.vue'
 import CustomTable from '@/components/table/index.vue'
 import Pagination from '@/components/pagination.vue'
+
+const router = useRouter()
 
 const configs = ref<Array<QConfig>>([
   {name: 'input', prop: 'name', label: '计划名称', attrs: {placeholder: '请输入计划名称', clearable: true}},
@@ -40,7 +44,7 @@ const configs = ref<Array<QConfig>>([
 ])
 const queryData = reactive<Partial<Schedule>>({
   name: '',
-  date: new Date,
+  date: new Date().toString(),
   finished: 2
 })
 
@@ -48,13 +52,16 @@ const columns = ref<Array<ColumnProps>>([
   { attrs: { type: 'index', label: '序号' } },
   { attrs: { prop: 'name', label: '名称' } },
   { attrs: { prop: 'description', label: '描述' } },
-  { attrs: { prop: 'finished', label: '计划状态' }, _slot: true},
-  { attrs: { prop: 'operation', label: '操作', width: 120 }, _slot: true },
+  { attrs: { prop: 'date', label: '所需时间', width: 120 } },
+  { attrs: { prop: 'finished', label: '计划状态', width: 120 }, _slot: true},
+  { attrs: { prop: 'operation', label: '操作', width: 150 }, _slot: true },
 ])
 const list = ref<Array<Schedule>>([
-  {name: '111', description: '111', finished: 0, date: new Date}
+  {id: '12132', name: '111', description: '111', finished: 0, date: '1周'}
 ])
-
+function jumpTo(row: Schedule) {
+  router.push({name: 'scheduleDetail', params: {id: row.id}})
+}
 function toggleStatus (row: Schedule) {
   row.finished = row.finished === 0 ? 1 : 0
 }
