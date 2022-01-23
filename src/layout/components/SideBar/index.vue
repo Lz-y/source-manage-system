@@ -40,9 +40,9 @@ const activeRoutes = computed(() => {
 
 const routes = computed(() => {
   function filterRoute (data: RouteRecordRaw[]) {
-    const newrRoute = data.filter(item => !item.meta?.hidden)
-    newrRoute.forEach(item => item.children && (item.children = filterRoute(item.children)))
-    return newrRoute
+    const newRoute = data.filter(item => !item.meta?.hidden)
+    newRoute.forEach(item => item.children && (item.children = filterRoute(item.children)))
+    return newRoute
   }
   return filterRoute(router.options.routes)
 })
