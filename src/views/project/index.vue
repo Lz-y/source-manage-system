@@ -2,6 +2,7 @@
   <div class="project-manage-page">
     <Query :configs='configs' :data='queryData' size='small' inline>
       <el-button type='primary' :icon='Search'>查询</el-button>
+      <el-button :icon='CirclePlus' @click="create">添加项目</el-button>
     </Query>
     <CustomTable :columns='columns' :data='list'>
       <template #img='{row}'>
@@ -18,8 +19,8 @@
         <span :style="{color: row.runing === 0 ? '#fdbc00' : '#0ac710'}">{{row.runing === 0 ? '已暂停' : '运行中'}}</span>
       </template>
       <template #operation='{row}'>
-        <el-button type='text'>编辑</el-button>
-        <el-button type='text'>详情</el-button>
+        <el-button type='text' @click="edit(row)">编辑</el-button>
+        <el-button type='text' @click="view(row)">详情</el-button>
         <el-popconfirm confirm-button-text='确认'
           cancel-button-text='取消'
           :icon='InfoFilled'
@@ -42,12 +43,14 @@ export default {
 </script>
 <script setup lang="ts">
 import { reactive, ref } from 'vue-demi'
-import { Search, InfoFilled, VideoPlay, VideoPause } from '@element-plus/icons-vue'
+import { useRouter } from 'vue-router'
+import { Search, InfoFilled, CirclePlus, VideoPlay, VideoPause } from '@element-plus/icons-vue'
 
 import Query from '@/components/query.vue'
 import CustomTable from '@/components/table/index.vue'
 import Pagination from '@/components/pagination.vue'
 
+const router = useRouter()
 const configs = ref<Array<QConfig>>([
   { name: 'input', prop: 'title', label: '项目名称', attrs: {placeholder: '请输入项目名称', clearable: true}, },
   {
@@ -72,9 +75,17 @@ const columns = ref<Array<ColumnProps>>([
   { attrs: { prop: 'operation', label: '操作', width: 140 }, _slot: true },
 ])
 const list = ref<Array<Project>>([
-  {name: '111', img: '/src/assets/logo.png', description: '111', createTime: '2021-12-28', runingTime: '0天20小时12分', runing: 1,}
+  {id: '111', name: '111', img: '/src/assets/logo.png', description: '111', createTime: '2021-12-28', runingTime: '0天20小时12分', runing: 1,}
 ])
-
+function create() {
+  router.push({name: 'projectDetail', params: {id: 0}})
+}
+function edit(row: Project) {
+  router.push({name: 'projectDetail', params: {id: row.id}})
+}
+function view(row: Project) {
+  router.push({name: 'projectDetail', params: {id: row.id}})
+}
 function toggleRunning (row: Project) {
   row.runing = row.runing === 0 ? 1 : 0
 }

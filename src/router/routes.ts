@@ -47,11 +47,11 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/article',
     component: () => import('@/layout/index.vue'),
-    redirect: '/article',
+    redirect: '/article/list',
     meta: {title: '文章管理', icon: 'article'},
     children: [
       {
-        path: '',
+        path: 'list',
         name: 'article',
         component: () => import('@/views/article/index.vue'),
         meta: { title: 'blog/笔记/日记', icon: 'note', auth: true }
@@ -91,13 +91,21 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/project',
     component: () => import('@/layout/index.vue'),
+    meta: {title: '项目管理', icon: 'project', auth: true},
+    redirect: '/project/list',
     children: [
       {
-        path: '',
+        path: 'list',
         name: 'project',
         component: () => import('@/views/project/index.vue'),
-        meta: { title: '项目管理', icon: 'project', auth: true }
-      }
+        meta: { title: '列表', hidden: true}
+      },
+      {
+        path: 'detail/:id',
+        name: 'projectDetail',
+        component: () => import('@/views/project/detail.vue'),
+        meta: { title: '详情', hidden: true}
+      },
     ]
   },
   {

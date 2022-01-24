@@ -2,7 +2,7 @@
   <div class="user-manage-page">
     <Query :configs="configs" :data="formData" size='small' inline>
       <el-button type='primary' :icon='Search'>查询</el-button>
-      <el-button @click="addUser">添加用户</el-button>
+      <el-button :icon='CirclePlus' @click="addUser">添加用户</el-button>
       <el-button>导出用户数据</el-button>
     </Query>
     <CustomTable :columns="columns" :data='tableData'>
@@ -56,7 +56,7 @@ export default {
 </script>
 <script setup lang="ts">
 import { reactive, ref } from 'vue-demi'
-import { Search, InfoFilled, Plus } from '@element-plus/icons-vue'
+import { Search, CirclePlus, InfoFilled, Plus } from '@element-plus/icons-vue'
 
 import Query from '@/components/query.vue'
 import CustomTable from '@/components/table/index.vue'

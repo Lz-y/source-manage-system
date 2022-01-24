@@ -2,6 +2,7 @@
   <div class="resource-manage-page">
     <Query :configs='configs' :data='queryData' size='small' inline>
       <el-button type='primary' :icon='Search'>查询</el-button>
+      <el-button :icon='CirclePlus'>添加资源</el-button>
     </Query>
     <CustomTable :columns='columns' :data='list'>
       <template #img='{row}'>
@@ -51,7 +52,7 @@ export default {
 </script>
 <script setup lang="ts">
 import {ref, reactive} from 'vue-demi'
-import { Search, InfoFilled } from '@element-plus/icons-vue'
+import { Search, CirclePlus, InfoFilled } from '@element-plus/icons-vue'
 
 import Query from '@/components/query.vue'
 import CustomTable from '@/components/table/index.vue'

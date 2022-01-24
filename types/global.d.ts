@@ -80,6 +80,7 @@ declare interface Logs {
 }
 
 declare interface Project{
+  id: string
   name: string
   img?: string
   description: string

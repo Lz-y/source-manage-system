@@ -1,7 +1,7 @@
 <template>
   <div class="schedule-detail-page">
-    <h3 class="schedule-title">计划详情 - 学习 Vue3 响应式原理</h3>
-    <Query :configs='configs' :data='queryData' size='small' :label-width="100" style="max-width: 45vw;">
+    <h3 class="title">计划详情 - 学习 Vue3 响应式原理</h3>
+    <Query :configs='configs' :data='queryData' size='small' :label-width="100" style="max-width: 40vw;">
       <el-button type='primary'>保存</el-button>
     </Query>
   </div>
@@ -24,11 +24,3 @@ const queryData = reactive({
   description: ''
 })
 </script>
-
-<style lang="scss">
-.schedule-detail-page{
-  padding-top: 20px;
-  overflow: hidden;
-
-}
-</style>
