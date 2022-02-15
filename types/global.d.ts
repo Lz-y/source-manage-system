@@ -100,9 +100,9 @@ declare interface Todo {
   finished: boolean
 }
 declare interface Schedule {
-  id: string
+  id?: string
   name: string
-  date: string
+  date: string[]
   description: string
   finished: 0 | 1 | 2
 }

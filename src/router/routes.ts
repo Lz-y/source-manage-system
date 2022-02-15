@@ -23,13 +23,7 @@ const routes: RouteRecordRaw[] = [
         name: 'schedule',
         component: () => import('@/views/schedule/index.vue'),
         meta: { title: '计划', icon: 'schedule', auth: true }
-      },
-      {
-        path: 'detail/:id',
-        name: 'scheduleDetail',
-        component: () => import('@/views/schedule/detail.vue'),
-        meta: { title: '计划详情', hidden: true, auth: true }
-      },
+      }
     ]
   },
   {
