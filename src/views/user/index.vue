@@ -24,9 +24,9 @@
       </template>
     </CustomTable>
     <pagination :total="10" />
-    <el-dialog v-model="show" width="30%" title="编辑用户信息">
+    <el-dialog v-model="show" width="35%" title="编辑用户信息">
       <el-row>
-        <el-col :span="8">
+        <el-col :md="8" :sm="6" :xs="4">
           <el-upload
             class="avatar-upload"
             action=""
@@ -205,11 +205,13 @@ function uploadSuccess () {
 <style lang="scss">
 .user-manage-page{
   .avatar-upload {
+    width: 100%;
     cursor: pointer;
     position: relative;
     overflow: hidden;
 
     .el-upload{
+      width: 100%;
       &:hover{
         border-color: #409eff;
       }
@@ -220,10 +222,11 @@ function uploadSuccess () {
       border: 1px dashed #d9d9d9;
       font-size: 28px;
       color: #8c939d;
-      width: 178px;
+      width: 100%;
       height: 178px;
       line-height: 178px;
       text-align: center;
+      box-sizing: border-box;
     }
     .avatar {
       width: 178px;
