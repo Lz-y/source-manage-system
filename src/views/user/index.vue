@@ -24,7 +24,7 @@
       </template>
     </CustomTable>
     <pagination :total="10" />
-    <el-dialog v-model="show" width="35%" title="编辑用户信息">
+    <el-dialog v-model="show" width="35%" :title="title">
       <el-row>
         <el-col :md="8" :sm="6" :xs="4">
           <el-upload
@@ -116,7 +116,8 @@ const columns = ref<Array<ColumnProps>>([
   {
     attrs: {
       prop: 'operation',
-      label: '操作'
+      label: '操作',
+      width: 150
     },
     _slot: true
   }
@@ -141,6 +142,7 @@ const tableData = ref<Array<User>>([
 ])
 const isEdit = ref<boolean>(false)
 const show = ref<boolean>(false)
+const title = ref<string>()
 const userInfo = ref<Array<QConfig>>([
   {
     name: 'input', label: '账号', prop: 'account',
@@ -171,6 +173,7 @@ const curUser = reactive<User>({
 function addUser (){
   show.value = true
   isEdit.value = false
+  title.value = '添加用户'
 }
 function toggleStatus (row: User) {
   row.status = row.status === 0 ? 1 : 0
@@ -179,6 +182,7 @@ function toggleStatus (row: User) {
 function edit (row: User) {
   show.value = true
   isEdit.value = true
+  title.value = '编辑用户信息'
   Object.assign(curUser, row)
 }
 
