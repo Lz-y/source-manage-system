@@ -129,13 +129,13 @@ const routes: RouteRecordRaw[] = [
       {
         path: 'page',
         name: 'page',
-        component: () => import('@/views/setting/pageSetting.vue'),
+        component: () => import('@/views/setting/page.vue'),
         meta: { title: '页面设置', icon: 'setting', auth: true }
       },
       {
         path: 'system',
         name: 'system',
-        component: () => import('@/views/setting/index.vue'),
+        component: () => import('@/views/setting/system.vue'),
         meta: { title: '系统设置', icon: 'system', auth: true }
       },
     ]
