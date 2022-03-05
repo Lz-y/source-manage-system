@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import NProgress from 'nprogress'
 import routes from './routes'
 
+// NProgress.configure({ showSpinner: false })
+
 const router = createRouter({
   history: createWebHistory(),
   routes,
@@ -20,6 +22,11 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   NProgress.start()
   document.title = to.meta.title!
+  const token = localStorage.getItem('token')
+  // 未登录时需要验证权限
+  // if (token === null && to.meta.auth && to.path !== '/login') {
+  //   return next({name: 'login'})
+  // }
   next()
 })
 

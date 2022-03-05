@@ -8,6 +8,7 @@ export interface DeviceOptions {
   screenHeight: number
   theme: string
   fontSize: number
+  backgroundImage: string
 }
 export interface AppState {
   deviceDisplay: Partial<DeviceOptions>

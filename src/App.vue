@@ -1,4 +1,5 @@
 <template>
+  <div class="background" style="background-image: url('src/assets/39_white2_4k.jpg');"></div>
   <router-view></router-view>
 </template>
 

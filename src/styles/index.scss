@@ -14,6 +14,22 @@ html, body{
   margin-right: 0.5rem;
 }
 
+.background{
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  // z-index: -1;
+  background-color: rgba(0, 0, 0, 0.25);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-origin: border-box;
+  background-attachment: fixed;
+  background-blend-mode: color;
+}
+
 .el-aside {
   position: fixed;
   left: 0;
@@ -56,7 +72,7 @@ html, body{
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: #fff;
+  background-color: rgba($color: #fff, $alpha: 0.5);
   overflow: hidden;
 }
 .nav{
@@ -118,7 +134,7 @@ html, body{
     overflow: hidden;
 
     & > [class$=-page] {
-      background-color: #fff;
+      background-color: rgba($color: #fff, $alpha: 0.5);
       padding: 0 20px 10px;
       border-radius: 10px;
       box-sizing: border-box;
