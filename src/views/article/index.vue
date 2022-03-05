@@ -51,13 +51,14 @@ export default {
 }
 </script>
 <script setup lang="ts">
-import { reactive, ref } from 'vue-demi'
+import { reactive, ref, onMounted } from 'vue'
 import { Search, InfoFilled } from '@element-plus/icons-vue'
 
 import Query from '@/components/query.vue'
 import CustomTable from '@/components/table/index.vue'
 import pagination from '@/components/pagination.vue'
 import { useRouter } from 'vue-router'
+import {getArticles} from '@/api'
 
 const router = useRouter()
 const classifyOptions = [{label: 'blog', value: 0}, {label: '笔记', value: 1}, {label: '日记', value: 2}]
@@ -147,6 +148,18 @@ function confirm () {
 function jumpTo () {
   router.push({name: 'write'})
 }
+
+const getAllArticle = async () => {
+  try {
+    const {data: {result}} = await getArticles(formData)
+    tableData.value = result
+  } catch (error) {
+   throw error 
+  }
+}
+onMounted (() => {
+  getAllArticle()
+})
 </script>
 
 <style lang="scss">
