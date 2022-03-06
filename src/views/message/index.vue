@@ -41,7 +41,7 @@ export default {
 }
 </script>
 <script setup lang="ts">
-import {ref, reactive} from 'vue-demi'
+import {ref, reactive} from 'vue'
 import { Search, InfoFilled } from '@element-plus/icons-vue'
 
 import Query from '@/components/query.vue'

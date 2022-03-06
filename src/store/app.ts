@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { reactive } from 'vue-demi'
+import { reactive } from 'vue'
  
 export interface DeviceOptions {
   device: string

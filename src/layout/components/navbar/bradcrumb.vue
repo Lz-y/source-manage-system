@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue-demi'
+import { ref, onMounted, watch } from 'vue'
 import { useRouter, useRoute, RouteLocationMatched } from 'vue-router'
 const router = useRouter()
 const route = useRoute()

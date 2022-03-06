@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, ref, computed } from 'vue-demi'
+import {defineComponent, ref, computed } from 'vue'
 import TodoItem from './item.vue'
 export default defineComponent({
   name: 'Todo',

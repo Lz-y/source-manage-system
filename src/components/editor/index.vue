@@ -2,28 +2,33 @@
   <div class="editor">
     <Navbar />
     <div class="editor-container">
-      <textarea ref="write$" id="write" v-model='originalText' placeholder="请输入正文" @scroll="handleScroll(1, $event)"></textarea>
+      <textarea ref="write$" id="write" :value='modelValue' @input="$emit('update:modelValue', $event.target!.value)" placeholder="请输入正文" @scroll="handleScroll(1, $event)"></textarea>
       <div ref="render$" id="render" v-html='parseText' @scroll="handleScroll(2, $event)"></div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, onMounted,onUnmounted, nextTick } from "vue-demi"
+import { defineComponent, ref, computed, onMounted,onUnmounted, nextTick } from "vue"
 import MarkdownIt from 'markdown-it'
 import hljs from 'highlight.js'
 import 'highlight.js/styles/github.css'
 import Navbar from './navbar.vue'
 
-let md: MarkdownIt
 export default defineComponent({
   name: 'MarkdownEditor',
   components: {
     Navbar
   },
-  setup () {
+  props: {
+    modelValue: {
+      type: String
+    }
+  },
+  emits: ['update:modelValue'],
+  setup (props) {
 
-    md = new MarkdownIt({
+    const md: MarkdownIt = new MarkdownIt({
       linkify: true,
       typographer: true,
       highlight: function (code: string, language: string) {
@@ -37,9 +42,8 @@ export default defineComponent({
         return `<pre class='hljs'><code>${md.utils.escapeHtml(code)}</code>`
       }
     })
-    const originalText = ref<string>('')
 
-    const parseText = computed(() => md.render(originalText.value))
+    const parseText = computed(() => md.render(props.modelValue!))
 
     const write$ = ref<HTMLTextAreaElement>()
     const render$ = ref<HTMLDivElement>()
@@ -92,7 +96,6 @@ export default defineComponent({
     })
 
     return {
-      originalText,
       parseText,
       write$,
       render$,

@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, PropType} from 'vue-demi'
+import {defineComponent, PropType} from 'vue'
 import {Close} from '@element-plus/icons-vue'
 export default defineComponent({
   name: 'TodoItem',

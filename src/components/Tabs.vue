@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, computed, defineAsyncComponent, onMounted, ref } from 'vue-demi'
+import { defineComponent, PropType, computed, defineAsyncComponent, onMounted, ref } from 'vue'
 
 export default defineComponent({
   props: {

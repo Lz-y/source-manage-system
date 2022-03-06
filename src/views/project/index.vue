@@ -42,7 +42,7 @@ export default {
 }
 </script>
 <script setup lang="ts">
-import { reactive, ref } from 'vue-demi'
+import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { Search, InfoFilled, CirclePlus, VideoPlay, VideoPause } from '@element-plus/icons-vue'
 

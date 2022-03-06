@@ -3,7 +3,7 @@ import {ElMessage, ElMessageBox} from 'element-plus'
 
 const serve = axios.create({
   baseURL: import.meta.env.BASE_URL,
-  timeout: 10000
+  timeout: 10000,
 })
 
 // request interceptor
@@ -24,15 +24,10 @@ serve.interceptors.request.use(
   }
 )
 
-export interface ResponseData {
-  code: number
-  msg: string
-  data: any
-}
 // response interceptor
 serve.interceptors.response.use(
   async response => {
-    const {code, msg, data} = response.data as ResponseData
+    const {code, msg, result} = response.data as ResponseData
     // error code handle
     switch (code) {
       case 401:
@@ -49,7 +44,7 @@ serve.interceptors.response.use(
      default:
       break
     }
-    return data
+    return response.data
   },
   error => {
     console.error('response error -->', error)

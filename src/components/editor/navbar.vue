@@ -63,7 +63,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ComponentInternalInstance, getCurrentInstance } from 'vue-demi'
+import { defineComponent, ComponentInternalInstance, getCurrentInstance } from 'vue'
 import * as insert from './utils'
 
 export default defineComponent({

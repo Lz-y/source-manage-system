@@ -55,7 +55,7 @@ export default {
 }
 </script>
 <script setup lang="ts">
-import { reactive, ref } from 'vue-demi'
+import { reactive, ref } from 'vue'
 import { Search, CirclePlus, InfoFilled, Plus } from '@element-plus/icons-vue'
 
 import Query from '@/components/query.vue'

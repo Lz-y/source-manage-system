@@ -6,7 +6,7 @@
 import {ECharts} from 'echarts'
 import echarts from './index'
 import { useEventListener, tryOnUnmounted, useTimeoutFn } from "@vueuse/core"
-import { onBeforeMount, onMounted, nextTick } from "vue-demi"
+import { onBeforeMount, onMounted, nextTick } from "vue"
 
 let echartInstance: ECharts | null
 // const props = defineProps({

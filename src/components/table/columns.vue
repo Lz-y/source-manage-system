@@ -28,7 +28,7 @@ import {
   ComponentInternalInstance,
   VNode,
   ref
-} from "vue-demi"
+} from "vue"
 import { ElTableColumn } from "element-plus"
 
 export default defineComponent({

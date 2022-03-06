@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, provide, PropType, getCurrentInstance } from 'vue-demi'
+import { defineComponent, provide, PropType, getCurrentInstance } from 'vue'
 import Columns from './columns.vue'
 
 export default defineComponent({

@@ -46,7 +46,7 @@ export default {
 }
 </script>
 <script setup lang="ts">
-import {reactive, ref} from 'vue-demi'
+import {reactive, ref} from 'vue'
 
 import LineChart from '@/components/chart/line.vue'
 import PieChart from '@/components/chart/pie.vue'

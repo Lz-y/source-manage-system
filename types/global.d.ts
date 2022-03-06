@@ -29,7 +29,11 @@ declare interface TabsProps{
   component: any
   show: boolean
 }
-
+declare interface ResponseData {
+  code: number
+  msg: string
+  result: any
+}
 declare interface User {
   account: string
   nickName: string
@@ -39,15 +43,20 @@ declare interface User {
 }
 
 declare interface Article {
+  _id?: any
   url?: string
   title: string
   classify: string
   tags: Array<string>
   createTime: string
-  pv: number
-  commentary: number
+  publishTime: string
+  viewNum: number
+  commentNum: number
+  likeNum: number
   encrypt: 0 | 1
   status: 0 | 1
+  psw?: string
+  content: string
 }
 
 declare interface ResourceFile { 

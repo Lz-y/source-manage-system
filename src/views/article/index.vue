@@ -1,10 +1,10 @@
 <template>
   <div class="article-manage-page">
     <Query :configs="configs" :data="formData" size='small' inline>
-      <el-button type='primary' :icon='Search'>查询</el-button>
+      <el-button type='primary' :icon='Search' @click="query">查询</el-button>
       <el-button type='primary'>导出文章数据</el-button>
     </Query>
-    <CustomTable :columns="columns" :data='tableData'>
+    <CustomTable :columns="columns" :data='tableData' v-loading="loading" stripe>
       <template #url='{row}'>
         <img :src="row.url" alt="文章封面">
       </template>
@@ -14,32 +14,32 @@
         </div>
       </template>
       <template #encrypt='{row}'>
-        <span :class="row.encrypt === 0 ? 'available' : 'encrypted'">{{row.encrypt === 0 ? '公开' : '已加密'}}</span>
+        <span :class="row.encrypt === 1 ? 'available' : 'encrypted'">{{row.encrypt === 1 ? '公开' : '已加密'}}</span>
       </template>
       <template #status='{row}'>
-        <span :class="row.status === 0 ? 'invalid' : 'available'">{{row.status === 0 ? '已失效' : '可用'}}</span>
+        <span :class="row.status === 0 ? 'no-reply' : 'available'">{{row.status === 0 ? '草稿' : '已发布'}}</span>
       </template>
       <template #operation='{row}'>
-        <el-button type='text' size='small' @click="showEncryptDislog">{{row.encrypt === 0 ? '加密' : '公开'}}</el-button>
+        <el-button type='text' size='small' @click="showEncryptDislog(row)">{{row.encrypt === 0 ? '公开' : '加密'}}</el-button>
         <el-popconfirm confirm-button-text='确认'
           cancel-button-text='取消'
           :icon='InfoFilled'
           icon-color='#fdbc00'
-          :title="`确定${row.status === 0 ? '启用' : '禁用'}该文章？`"
+          :title="`确定${row.status === 0 ? '发布' : '下架'}该文章？`"
           @confirm='toggleStatus(row)'>
           <template #reference>
-            <el-button type='text' size='small'>{{row.status === 0 ? '启用' : '禁用'}}</el-button>
+            <el-button type='text' size='small'>{{row.status === 0 ? '发布' : '下架'}}</el-button>
           </template>
         </el-popconfirm>
-        <el-button type='text' size='small' @click="jumpTo">编辑</el-button>
+        <el-button type='text' size='small' @click="jumpTo(row)">编辑</el-button>
       </template>
     </CustomTable>
-    <pagination :total="10" />
-    <el-dialog v-model='visible' title="请输入文章密码" width="20%">
-      <Query :configs='encryptConfig' :data='encryptForm' :rules='rules'></Query>
+    <pagination :total="pageTotal" />
+    <el-dialog v-model='visible' title="请输入文章密码" width="20%" :before-close="close">
+      <Query ref="encryptForm$" :configs='encryptConfig' :data='encryptForm' :rules='rules' size="small" status-icon></Query>
       <template #footer>
-        <el-button size='small' @click="close">关闭</el-button>
-        <el-button size='small' type="primary" @click="confirm">确认</el-button>
+        <el-button size='mini' @click="close">关闭</el-button>
+        <el-button size='mini' type="primary" @click="confirm">确认</el-button>
       </template>
     </el-dialog>
   </div>
@@ -51,41 +51,46 @@ export default {
 }
 </script>
 <script setup lang="ts">
-import { reactive, ref, onMounted } from 'vue'
+import { reactive, ref, onMounted, unref, toRaw } from 'vue'
 import { Search, InfoFilled } from '@element-plus/icons-vue'
-
+import { useRouter } from 'vue-router'
+import {ElNotification} from 'element-plus'
 import Query from '@/components/query.vue'
 import CustomTable from '@/components/table/index.vue'
 import pagination from '@/components/pagination.vue'
-import { useRouter } from 'vue-router'
-import {getArticles} from '@/api'
+import {getArticles, putArticle} from '@/api'
+import { isEmpty } from 'lodash'
 
 const router = useRouter()
-const classifyOptions = [{label: 'blog', value: 0}, {label: '笔记', value: 1}, {label: '日记', value: 2}]
+const classifyOptions = [{label: 'blog', value: 'blog'}, {label: '笔记', value: 'note'}, {label: '日记', value: 'daily'}]
 const configs = ref<Array<QConfig>>([
   {
-    name: 'input', label: '标题', prop: 'name',
+    name: 'input', label: '标题', prop: 'title',
     attrs: {placeholder: '请输入标题', clearable: true}
   },
   {
     name: 'select', label: '分类', prop: 'classify',
     attrs: {placeholder: '请选择分类', clearable: true},
-    options: classifyOptions
+    options: classifyOptions,
+    events: {change: getAllArticle}
   },
   {
     name: 'select', label: '标签', prop: 'tags',
     attrs: {placeholder: '请选择标签', clearable: true, multiple: true, multipleLimit: 2},
-    options: [{label: 'vue', value: 0}, {label: 'node.js', value: 1}, {label: 'python', value: 2}]
+    options: [{label: 'vue', value: 'vue'}, {label: 'react', value: 'react'}, {label: 'node', value: 'node'}],
+    events: {change: getAllArticle}
   },
   {
     name: 'select', label: '加密状态', prop: 'encrypt',
     attrs: {placeholder: '请选择加密状态', clearable: true},
-    options: [{label: '未加密', value: 0}, {label: '已加密', value: 1}]
+    options: [{label: '已加密', value: 0}, {label: '未加密', value: 1}],
+    events: {change: getAllArticle}
   },
   {
     name: 'select', label: '状态', prop: 'status',
     attrs: {placeholder: '请选择状态', clearable: true},
-    options: [{label: '已失效', value: 0}, {label: '正常', value: 1}]
+    options: [{label: '草稿', value: 0}, {label: '已发布', value: 1}],
+    events: {change: getAllArticle}
   }
 ])
 
@@ -93,68 +98,112 @@ const columns = ref<Array<ColumnProps>>([
   { attrs: { type: 'index', label: '序号' } },
   { attrs: { prop: 'url', label: '封面', }, _slot: true },
   { attrs: { prop: 'title', label: '标题', } },
-  { attrs: { prop: 'classify', label: '类别', width: 80}},
+  { attrs: { prop: 'classify', label: '类别', width: 50}},
   { attrs: { prop: 'tags', label: '标签' }, _slot: true },
-  { attrs: { prop: 'createTime', label: '发布时间' } },
-  { attrs: { prop: 'pv', label: '浏览数' } },
-  { attrs: { prop: 'commentary', label: '评论数' } },
+  { attrs: { prop: 'createTime', label: '创建时间' } },
+  { attrs: { prop: 'publishTime', label: '发布时间' } },
+  { attrs: { prop: 'viewNum', label: '浏览数', width: 100 } },
+  { attrs: { prop: 'commentNum', label: '评论数', width: 100 } },
+  { attrs: { prop: 'likeNum', label: '点赞数', width: 100 } },
   { attrs: { prop: 'encrypt', label: '加密状态', width: 80 }, _slot: true },
   { attrs: { prop: 'status', label: '状态', width: 80 }, _slot: true },
   { attrs: { prop: 'operation', label: '操作', width: 120 }, _slot: true }
 ])
 
-const formData = reactive({
-  name: '',
-  classify: 0,
-  tags: null,
-  encrypt: null,
-  status: null
+const formData = reactive<Partial<Article>>({
+  classify: 'blog',
+  tags: []
 })
 const visible = ref<boolean>(false)
 const encryptConfig = ref<Array<QConfig>>([
-  {name: 'input', prop: 'encrypt', attrs: {type: 'password', showPassword: true, placeholder: '请输入文章密码', tabindex: 1}}
+  {name: 'input', prop: 'psw', label: '密码', attrs: {type: 'password', showPassword: true, placeholder: '请输入文章密码', tabindex: 1}}
 ])
 const encryptForm = reactive({
-  encrypt: null
+  id: null,
+  encrypt: null,
+  psw: null
 })
+const encryptForm$ = ref()
 const rules = reactive({
-  encrypt: [
+  psw: [
     {required: true, message: '请输入文章密码', trigger: 'blur'},
     {validator: validatorPsw, trigger: ['change', 'blur']},
   ]
 })
 function validatorPsw (rule: any, value: string, callback: Function) {
-  if (!/^[a-zA-Z0-9\.@#]{4,8}$/g.test(value)) {
-    callback(new Error('仅能输入4-8位大小写字母、数字和.#@'))
+  if (!/^[a-zA-Z0-9\.@#]{6,10}$/g.test(value)) {
+    callback(new Error('仅能输入6-10位大小写字母、数字和.#@'))
   } else {
     callback()
   }
 }
-const tableData = ref<Array<Article>>([
-  {url: '', title: 'Vue3 的使用', classify: 'blog', tags: ['Vue', 'Pinia', 'Vue-Router 4.0'], createTime: '2021-12-22 23:38:45', pv: 100, commentary: 100, encrypt: 0, status: 1},
-])
-function toggleStatus (row: ResourceFile) {
-  row.status = row.status === 0 ? 1 : 0
+const tableData = ref<Array<Article>>([])
+const loading = ref<boolean>(false)
+const pageTotal = ref<number>(0)
+
+async function toggleStatus (row: Article) {
+  await modifyArticle(row._id, {status: row.status === 0 ? 1 : 0}, `该文章${row.status === 0 ? '发布' : '下架'}成功`)
+  await getAllArticle()
 }
-function showEncryptDislog () {
+function showEncryptDislog (row: Article) {
   visible.value = true
+  encryptForm.id = row._id
+  encryptForm.encrypt = row.encrypt === 0 ? 1 : 0 as any
 }
 function close () {
+  encryptForm$.value.form$.clearValidate()
+  Object.assign(encryptForm, {id: null, psw: null, encrypt: null})
   visible.value = false
 }
-function confirm () {
-  visible.value = false
-}
-function jumpTo () {
-  router.push({name: 'write'})
-}
-
-const getAllArticle = async () => {
+async function confirm () {
   try {
-    const {data: {result}} = await getArticles(formData)
-    tableData.value = result
+    const valid = await encryptForm$.value.form$.validate()
+    if (!valid) {
+     return false
+    }
+    await modifyArticle(encryptForm.id, {psw: encryptForm.psw!, encrypt: encryptForm.encrypt!}, `${encryptForm.encrypt! === 0 ? '加密' : '公开'}成功`)
+    await getAllArticle()
+  } catch (error) {
+    throw error
+  } finally {
+    close()
+  }
+}
+function jumpTo (row: Article) {
+  router.push({name: 'write', query: {id: row._id}})
+}
+function query () {
+  getAllArticle()
+}
+async function getAllArticle () {
+  loading.value = true
+  try {
+    const {title, classify, tags, encrypt, status} = formData
+    const params: Partial<Pick<Article, 'title' | 'classify' | 'tags' | 'encrypt' | 'status'>> = {title, classify, encrypt, status}
+    
+    if (tags!.length > 0) {
+      params['tags'] = tags!.join() as any
+    }
+    const {result: {data, total}} = await getArticles(params)
+    tableData.value = data
+    pageTotal.value = total
   } catch (error) {
    throw error 
+  } finally {
+    loading.value = false
+  }
+}
+const modifyArticle = async (id: any, data: Partial<Article>, message: string) => {
+  try {
+    await putArticle(id, data)
+    ElNotification({
+      title: 'success',
+      message,
+      type: 'success',
+      duration: 3000
+    })
+  } catch (error) {
+    throw error
   }
 }
 onMounted (() => {

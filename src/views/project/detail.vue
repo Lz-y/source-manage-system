@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang="ts">
-import {ref, reactive, onMounted} from 'vue-demi'
+import {ref, reactive, onMounted} from 'vue'
 import {useRoute} from 'vue-router'
 
 import Query from '@/components/query.vue'

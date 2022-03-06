@@ -1,4 +1,4 @@
-import { nextTick } from 'vue-demi'
+import { nextTick } from 'vue'
 
 function getCursorPosition(el: HTMLTextAreaElement) {
     let { selectionStart, selectionEnd } = el

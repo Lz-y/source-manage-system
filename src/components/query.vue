@@ -50,7 +50,7 @@
 </template>
 
 <script lang="ts">
-import { ref } from 'vue-demi'
+import { ref, defineExpose } from 'vue'
 
 export default {
   inheritAttrs: false
@@ -64,7 +64,7 @@ defineProps<{
 }>()
 const form$ = ref()
 
-function resetFields () {
-  form$.value!.resetFields()
-}
+defineExpose({
+  form$
+})
 </script>

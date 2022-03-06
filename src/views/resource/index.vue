@@ -73,7 +73,7 @@ export default {
 }
 </script>
 <script setup lang="ts">
-import {ref, reactive, nextTick} from 'vue-demi'
+import {ref, reactive, nextTick} from 'vue'
 import { Search, CirclePlus, InfoFilled, Plus } from '@element-plus/icons-vue'
 
 import Query from '@/components/query.vue'

@@ -3,15 +3,16 @@ import request from './request'
 import {AxiosRequestConfig, Method} from 'axios'
 
 function wrap (url: string, method: Method) {
-  return (...args: any[]) => {
+  return (...args: any[]): Promise<any> => {
     let [id, data] = args
+    let _url = url.slice()
     if (typeof id === 'string') {
-      url = url.replace(':id', id)
+      _url = _url.replace(':id', id)
     } else {
       data = id
     }
-    const options: AxiosRequestConfig = {
-      url,
+    let options: AxiosRequestConfig = {
+      url: _url,
       method
     }
     if (method === 'get') {
@@ -25,6 +26,7 @@ function wrap (url: string, method: Method) {
 }
 
 export const getArticles = wrap(URL.article.all, 'get')
+export const getOneArticle = wrap(URL.article.byId, 'get')
 export const createArticle = wrap(URL.article.one, 'post')
 export const putArticle = wrap(URL.article.byId, 'put')
 export const deleteArticle = wrap(URL.article.byId, 'delete')

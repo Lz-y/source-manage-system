@@ -31,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import {ref, nextTick} from 'vue-demi'
+import {ref, nextTick} from 'vue'
 import CustomTable from '@/components/table/index.vue'
 import { reactive } from 'vue'
 
