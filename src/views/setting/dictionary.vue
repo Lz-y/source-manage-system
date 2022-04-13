@@ -56,13 +56,13 @@
 												<Delete/>
 											</el-icon>
 										</el-button>
-										<span class="ml10">字段</span>
+										<span>字段</span>
 									</template>
 									<el-input v-model="v.label" style="width: 100%" placeholder="请输入字段名"> </el-input>
 								</el-form-item>
 							</el-col>
 							<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
-								<el-form-item label="属性" :prop="v.value">
+								<el-form-item label="属性值" :prop="v.value">
 									<el-input v-model="v.value" style="width: 100%" placeholder="请输入属性值"> </el-input>
 								</el-form-item>
 							</el-col>
@@ -158,7 +158,8 @@ function close () {
       name: null,
       type: 'SYS_',
       status: 1,
-      children: [{label: '', value: ''}]
+      children: [{label: '', value: ''}],
+      description: ''
     })
   })
 }
