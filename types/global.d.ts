@@ -99,6 +99,7 @@ declare interface Project{
 }
 
 declare interface Dictionary {
+  _id: any
   name: string
   type: string,
   children?: Array<Dictionary>

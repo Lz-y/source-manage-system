@@ -26,7 +26,7 @@
 
 <script lang="ts">
 export default {
-  name: 'DictionarySettingManagePage'
+  name: 'PageSettingManagePage'
 }
 </script>
 <script setup lang="ts">
