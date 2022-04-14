@@ -9,7 +9,7 @@
         <el-tag :type="row.status === 1 ? 'success': 'info'" size="small">{{row.status === 1 ? '启用': '禁用'}}</el-tag>
       </template>
       <template #operation='{row}'>
-        <el-button type='text' @click="editDict(row)">编辑</el-button>
+        <el-button type='text' size="small" @click="editDict(row)">编辑</el-button>
         <el-popconfirm confirm-button-text='确认'
           cancel-button-text='取消'
           :icon='InfoFilled'
@@ -17,7 +17,7 @@
           title="确认删除该字典？"
           @confirm='deleteDict(row)'>
           <template #reference>
-            <el-button type='text'>删除</el-button>
+            <el-button type='text' size="small">删除</el-button>
           </template>
         </el-popconfirm>
       </template>
