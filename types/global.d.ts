@@ -71,16 +71,18 @@ declare interface ResourceFile {
 }
 
 declare interface Message {
+  _id?: string
   title: string
-  message: string
+  content: string
   time: string
-  isReply: 0 | 1
+  replyStatus: 0 | 1
   reply?: string
   status: 0 | 1
 }
 
 declare interface Logs {
-  agent: string
+  _id?: string
+  userAgent: string
   ip: string
   url: string
   time: string
