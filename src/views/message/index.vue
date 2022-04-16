@@ -11,7 +11,7 @@
         <span :class="row.status === 0 ? 'invalid' : 'available'">{{row.status === 0 ? '已失效' : '正常'}}</span>
       </template>
       <template #operation='{row}'>
-        <el-button type='text' v-if="row.replyStatus === 0" @click="showReplyDislog(row)">回复</el-button>
+        <el-button type='text' size="small" v-if="row.replyStatus === 0" @click="showReplyDislog(row)">回复</el-button>
         <el-popconfirm confirm-button-text='确认'
           cancel-button-text='取消'
           :icon='InfoFilled'
@@ -19,7 +19,7 @@
           :title="`确定使该消息${row.status === 0 ? '恢复正常' : '失效'}？`"
           @confirm='toggleStatus(row)'>
           <template #reference>
-            <el-button type='text'>{{row.status === 0 ? '恢复正常' : '失效'}}</el-button>
+            <el-button type='text' size="small">{{row.status === 0 ? '恢复正常' : '失效'}}</el-button>
           </template>
         </el-popconfirm>
       </template>
