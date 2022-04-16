@@ -19,8 +19,8 @@
         <span :style="{color: row.runing === 0 ? '#fdbc00' : '#0ac710'}">{{row.runing === 0 ? '已暂停' : '运行中'}}</span>
       </template>
       <template #operation='{row}'>
-        <el-button type='text' @click="edit(row)">编辑</el-button>
-        <el-button type='text' @click="view(row)">详情</el-button>
+        <el-button type='text' size="small" @click="edit(row)">编辑</el-button>
+        <el-button type='text' size="small" @click="view(row)">详情</el-button>
         <el-popconfirm confirm-button-text='确认'
           cancel-button-text='取消'
           :icon='InfoFilled'
@@ -28,7 +28,7 @@
           :title="`是否${row.runing === 0 ? '启动' : '暂停'}该项目？`"
           @confirm='toggleRunning(row)'>
           <template #reference>
-            <el-button type='text'>{{row.runing === 0 ? '启动' : '暂停'}}</el-button>
+            <el-button type='text' size="small">{{row.runing === 0 ? '启动' : '暂停'}}</el-button>
           </template>
         </el-popconfirm>
       </template>
