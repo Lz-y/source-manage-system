@@ -59,15 +59,17 @@ declare interface Article {
   content: string
 }
 
-declare interface ResourceFile { 
+declare interface ResourceFile {
+  _id?: string
   name: string
   img?: string
-  url: string
+  link: string
   classify: string
-  description: string
+  summary: string
   status: 0 | 1
   encrypt: 0 | 1
   psw?: string
+  createTime: string
 }
 
 declare interface Message {
