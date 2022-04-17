@@ -2,7 +2,7 @@
   <div class="article-manage-page">
     <Query :configs="configs" :data="formData" size='small' inline>
       <el-button type='primary' :icon='Search' @click="query">查询</el-button>
-      <el-button type='primary'>导出文章数据</el-button>
+      <el-button>导出文章数据</el-button>
     </Query>
     <CustomTable :columns="columns" :data='tableData' v-loading="loading" stripe>
       <template #url='{row}'>
