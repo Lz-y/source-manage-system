@@ -57,8 +57,8 @@ const configs = ref<Array<QConfig>>([
   {name: 'select', prop: 'status', label: '计划状态', options: statusOption, attrs: {placeholder: '请选择计划状态', clearable: true}}
 ])
 
-const queryData = reactive<Partial<Schedule>>({
-  name: '',
+const queryData = reactive({
+  name: null,
   spend: [],
   status: null
 })
@@ -66,6 +66,7 @@ const queryData = reactive<Partial<Schedule>>({
 const columns = ref<Array<ColumnProps>>([
   { attrs: { type: 'index', label: '序号' } },
   { attrs: { prop: 'name', label: '名称' } },
+  { attrs: { prop: 'sequence', label: '优先级' } },
   { attrs: { prop: 'summary', label: '描述' } },
   { attrs: { prop: 'spend', label: '所需时间', width: 240} },
   { attrs: { prop: 'createTime', label: '创建时间', width: 180} },
@@ -83,6 +84,7 @@ const title = ref<string>('')
 const schduleConfigs = ref<Array<QConfig>>([
   {name: 'input', prop: 'name', label: '计划名称', attrs: {placeholder: '请输入计划名称', clearable: true}},
   {name: 'date-picker', prop: 'spend', label: '所需时间', attrs: { type: 'daterange', rangeSeparator: '-',startPlaceholder: '开始日期', endPlaceholder: '截止日期', valueFormat: 'YYYY-MM-DD'}},
+  {name: 'input-number', prop: 'sequence', label: '优先级', attrs: {precision: 0, step: 1, min: 0, 'controls-position': 'right'}},
   {name: 'select', prop: 'status', label: '计划状态', options: statusOption, attrs: {placeholder: '请选择计划状态', clearable: true}},
   {name: 'input', prop: 'summary', label: '描述', attrs: {type: 'textarea', placeholder: '请输入计划描述'}}
 ])
@@ -90,6 +92,7 @@ const schduleConfigs = ref<Array<QConfig>>([
 const scheduleInfo = reactive<Schedule>({
   name: '',
   spend: [],
+  sequence: 0,
   status: 0,
   summary: ''
 })
@@ -146,6 +149,7 @@ function cancel () {
     name: '',
     spend: [],
     status: 0,
+    sequence: 0,
     summary: ''
   })
   scheduleInfo._id && delete scheduleInfo._id
@@ -160,7 +164,8 @@ async function save () {
         name: scheduleInfo.name,
         summary: scheduleInfo.summary,
         spend: scheduleInfo.spend,
-        status: scheduleInfo.status
+        status: scheduleInfo.status,
+        sequence: scheduleInfo.sequence
       }
       res = await putSchedule(scheduleInfo._id, params)
     } else {

@@ -3,7 +3,7 @@ declare interface AnyTypeObject {
 }
 // query form config props
 declare interface QConfig {
-  name: 'input' | 'select' | 'date-picker' | 'checkbox' | 'radio' | 'switch' | 'rate'
+  name: 'input' | 'input-number' | 'select' | 'date-picker' | 'checkbox' | 'radio' | 'switch' | 'rate'
   prop: string
   label?: string
   options?: any[]
@@ -125,5 +125,6 @@ declare interface Schedule {
   spend: string[]
   summary: string
   status: 0 | 1 | 2 | null
+  sequence: number
   createTime?: string
 }
