@@ -35,11 +35,14 @@ declare interface ResponseData {
   result: any
 }
 declare interface User {
+  _id?: string
   account: string
   nickName: string
+  gender: 0 | 1 | null
   email: string
   avatar?: string
   status: 0 | 1
+  createTime?: string
 }
 
 declare interface Article {
