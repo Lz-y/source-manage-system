@@ -69,23 +69,23 @@ const columns = ref<Array<ColumnProps>>([
   { attrs: { prop: 'name', label: '项目名称' } },
   { attrs: { prop: 'img', label: '封面', width: 80 }, _slot: true },
   { attrs: { prop: 'description', label: '描述' } },
-  { attrs: { prop: 'createTime', label: '创建时间' }, _slot: true },
-  { attrs: { prop: 'runingTime', label: '运行时间' }, _slot: true },
+  { attrs: { prop: 'createTime', label: '创建时间' } },
+  { attrs: { prop: 'runingTime', label: '运行时间' } },
   { attrs: { prop: 'runing', label: '运行状态', width: 100 }, _slot: true},
   { attrs: { prop: 'operation', label: '操作', width: 140 }, _slot: true },
 ])
 const list = ref<Array<Project>>([
-  {id: '111', name: '111', img: '/src/assets/logo.png', description: '111', createTime: '2021-12-28', runingTime: '0天20小时12分', runing: 1,}
+  {_id: '111', name: '111', img: '/src/assets/logo.png', description: '111', createTime: '2021-12-28', runingTime: '0天20小时12分', runing: 1,}
 ])
 const loading = ref<boolean>(false)
 function create() {
   router.push({name: 'projectDetail', params: {id: 0}})
 }
 function edit(row: Project) {
-  router.push({name: 'projectDetail', params: {id: row.id}})
+  router.push({name: 'projectDetail', params: {id: row._id}})
 }
 function view(row: Project) {
-  router.push({name: 'projectDetail', params: {id: row.id}})
+  router.push({name: 'projectDetail', params: {id: row._id}})
 }
 function toggleRunning (row: Project) {
   row.runing = row.runing === 0 ? 1 : 0
