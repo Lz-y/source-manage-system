@@ -3,7 +3,7 @@
     <Query :configs='configs' :data='queryData' size='small' inline>
       <el-button type='primary' :icon='Search'>查询</el-button>
     </Query>
-    <CustomTable :columns='columns' :data='list'>
+    <CustomTable v-loading="loading" :columns='columns' :data='list'>
       <template #replyStatus='{row}'>
         <span :class="row.replyStatus === 0 ? 'no-reply' : 'available'">{{row.replyStatus === 0 ? '待回复' : '已回复'}}</span>
       </template>
@@ -25,7 +25,7 @@
       </template>
     </CustomTable>
     <Pagination :total='20' />
-    <el-dialog v-model='visible' title="回复" width="20%" top="25vh">
+    <el-dialog v-model='visible' title="回复" width="20%" top="35vh">
       <Query :configs='encryptConfig' :data='encryptForm'></Query>
       <template #footer>
         <el-button size='small' @click="close">关闭</el-button>
@@ -44,6 +44,7 @@ export default {
 import {ref, reactive, onMounted} from 'vue'
 import { Search, InfoFilled } from '@element-plus/icons-vue'
 import { ElNotification } from 'element-plus'
+import dayjs from 'dayjs'
 
 import Query from '@/components/query.vue'
 import CustomTable from '@/components/table/index.vue'
@@ -73,7 +74,7 @@ const columns = ref<Array<ColumnProps>>([
   { attrs: { type: 'index', label: '序号' } },
   { attrs: { prop: 'message', label: '消息' } },
   { attrs: { prop: 'replyContent', label: '回复内容' } },
-  { attrs: { prop: 'publishTime', label: '时间' } },
+  { attrs: { prop: 'createTime', label: '时间' } },
   { attrs: { prop: 'replyStatus', label: '是否回复' }, _slot: true},
   { attrs: { prop: 'status', label: '状态' }, _slot: true},
   { attrs: { prop: 'operation', label: '操作', width: 120 }, _slot: true },
@@ -132,6 +133,9 @@ async function loadData() {
   loading.value = true
   try {
     const {result: {data, total}} = await getMessages(queryData)
+    data.forEach((item: Message) => {
+      item.createTime = dayjs(item.createTime).format('YYYY-MM-DD HH:mm:ss')
+    })
     list.value = data
     pageTotal.value = total
   } catch (error) {

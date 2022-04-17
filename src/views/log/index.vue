@@ -3,7 +3,7 @@
     <Query :configs='configs' :data='queryData' size='small' inline>
       <el-button type='primary' :icon='Search' size="small">查询</el-button>
     </Query>
-    <CustomTable :columns='columns' :data='list'>
+    <CustomTable v-loading="loading" :columns='columns' :data='list'>
       <template #code='{row}'>
         <span :class="row.code === 0 ? 'invalid' : 'available'">{{row.code}}</span>
       </template>
@@ -36,6 +36,7 @@ export default {
 import {ref, reactive, toRaw, onMounted} from 'vue'
 import { ElNotification } from 'element-plus'
 import { Search, InfoFilled } from '@element-plus/icons-vue'
+import dayjs from 'dayjs'
 
 import Query from '@/components/query.vue'
 import CustomTable from '@/components/table/index.vue'
@@ -98,6 +99,9 @@ async function loadData() {
   loading.value = true
   try {
     const {result: {data, total}} = await getLogs(queryData)
+    data.forEach((item: Logs) => {
+      item.requestTime = dayjs(item.requestTime).format('YYYY-MM-DD HH:mm:ss')
+    })
     list.value = data
     pageTotal.value = total
   } catch (error) {

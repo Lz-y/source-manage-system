@@ -4,7 +4,7 @@
       <el-button type='primary' :icon='Search'>查询</el-button>
       <el-button :icon='CirclePlus' @click="addResource(0)">添加资源</el-button>
     </Query>
-    <CustomTable :columns='columns' :data='list'>
+    <CustomTable v-loading="loading" :columns='columns' :data='list'>
       <template #name='{row}'>
         <a :href="row.link" target="_blank">{{row.name}}</a>
       </template>
@@ -37,15 +37,15 @@
       </template>
     </CustomTable>
     <Pagination :total='20' />
-    <el-dialog v-model='visible' title="请输入文件密码" width="20%">
+    <el-dialog v-model='visible' title="请输入文件密码" width="20%" top="35vh">
       <Query ref="encryptForm$" :configs='encryptConfig' :data='encryptForm' :rules='rules'></Query>
       <template #footer>
         <el-button size='small' @click="close">关闭</el-button>
         <el-button size='small' type="primary" @click="confirm">确认</el-button>
       </template>
     </el-dialog>
-    <el-dialog v-model="showAddResource" title="添加资源" width="35%">
-      <el-row>
+    <el-dialog v-model="showAddResource" title="添加资源" width="35%" top="25vh">
+      <el-row align="middle">
         <el-col :xs="4" :sm="6" :md="6">
           <el-upload
             class="avatar-upload"
@@ -78,6 +78,7 @@ export default {
 import {ref, reactive, nextTick, onMounted, toRaw} from 'vue'
 import { Search, CirclePlus, InfoFilled, Plus } from '@element-plus/icons-vue'
 import { ElNotification } from 'element-plus'
+import dayjs from 'dayjs'
 
 import Query from '@/components/query.vue'
 import CustomTable from '@/components/table/index.vue'
@@ -293,6 +294,9 @@ async function loadData() {
   loading.value = true
   try {
     const {result: {data, total}} = await getResources(queryData)
+    data.forEach((item: ResourceFile) => {
+      item.createTime = dayjs(item.createTime).format('YYYY-MM-DD HH:mm:ss')
+    })
     list.value = data
     pageTotal.value = total
   } catch (error) {

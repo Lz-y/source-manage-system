@@ -23,7 +23,7 @@
       </template>
     </CustomTable>
     <Pagination :total='pageTotal' />
-    <el-dialog v-model='visible' :title="`${isEdit ? '编辑' : '新增'}字典`" width="35%">
+    <el-dialog v-model='visible' :title="`${isEdit ? '编辑' : '新增'}字典`" width="35%" top="25vh">
       <el-form :model="dictForm" :rules="dictRules" ref="dictForm$" size="mini" label-width="90px">
 				<el-row :gutter="35">
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
@@ -91,6 +91,7 @@ export default {
 <script setup lang="ts">
 import { onMounted, reactive, ref, toRaw, watch, nextTick } from 'vue'
 import { Search, InfoFilled, CirclePlus, Delete } from '@element-plus/icons-vue'
+import dayjs from 'dayjs'
 
 import Query from '@/components/query.vue'
 import CustomTable from '@/components/table/index.vue'
@@ -217,6 +218,9 @@ async function loadData() {
   loading.value = true
   try {
     const {result: {data, total}} = await getDicts(queryData)
+    data.forEach((item: Dictionary) => {
+      item.createTime = dayjs(item.createTime).format('YYYY-MM-DD HH:mm:ss')
+    })
     list.value = data
     pageTotal.value = total
   } catch (error) {

@@ -4,7 +4,7 @@
       <el-button type='primary' :icon='Search'>查询</el-button>
       <el-button :icon='CirclePlus' @click="create">添加项目</el-button>
     </Query>
-    <CustomTable :columns='columns' :data='list'>
+    <CustomTable v-loading="loading" :columns='columns' :data='list'>
       <template #img='{row}'>
         <img :src="row.img" style="max-width: 50px;"/>
       </template>
@@ -77,6 +77,7 @@ const columns = ref<Array<ColumnProps>>([
 const list = ref<Array<Project>>([
   {id: '111', name: '111', img: '/src/assets/logo.png', description: '111', createTime: '2021-12-28', runingTime: '0天20小时12分', runing: 1,}
 ])
+const loading = ref<boolean>(false)
 function create() {
   router.push({name: 'projectDetail', params: {id: 0}})
 }

@@ -80,6 +80,7 @@ declare interface Message {
   replyStatus: 0 | 1
   reply?: string
   status: 0 | 1
+  createTime: string
 }
 
 declare interface Logs {
@@ -90,6 +91,7 @@ declare interface Logs {
   time: string
   code: 200 | 301 | 302 | 304 | 401 | 403 | 404 | 500 | 502
   status: 0 | 1
+  requestTime: string
 }
 
 declare interface Project{
@@ -107,6 +109,7 @@ declare interface Dictionary {
   name: string
   type: string,
   children?: Array<Dictionary>
+  createTime: string
 }
 
 declare interface Todo {

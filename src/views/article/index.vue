@@ -55,11 +55,12 @@ import { reactive, ref, onMounted, unref, toRaw } from 'vue'
 import { Search, InfoFilled } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router'
 import {ElNotification} from 'element-plus'
+import dayjs from 'dayjs'
+
 import Query from '@/components/query.vue'
 import CustomTable from '@/components/table/index.vue'
 import pagination from '@/components/pagination.vue'
 import {getArticles, putArticle} from '@/api'
-import { isEmpty } from 'lodash'
 
 const router = useRouter()
 const classifyOptions = [{label: 'blog', value: 'blog'}, {label: '笔记', value: 'note'}, {label: '日记', value: 'daily'}]
@@ -185,6 +186,9 @@ async function getAllArticle () {
       params['tags'] = tags!.join() as any
     }
     const {result: {data, total}} = await getArticles(params)
+    data.forEach((item: Article) => {
+      item.createTime = dayjs(item.createTime).format('YYYY-MM-DD HH:mm:ss')
+    })
     tableData.value = data
     pageTotal.value = total
   } catch (error) {

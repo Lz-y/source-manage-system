@@ -4,7 +4,7 @@
       <el-button type='primary' :icon='Search'>查询</el-button>
       <el-button :icon='CirclePlus' @click="createSchdule">添加计划</el-button>
     </Query>
-    <CustomTable :columns='columns' :data='list'>
+    <CustomTable v-loading="loading" :columns='columns' :data='list'>
       <template #status='{row}'>
         <span :class="statusOption[row.status].color">{{statusOption[row.status].label}}</span>
       </template>
@@ -22,7 +22,7 @@
       </template>
     </CustomTable>
     <Pagination :total='20' />
-    <el-dialog v-model="show" :title="title" width="30%">
+    <el-dialog v-model="show" :title="title" width="30%" top="30vh">
       <Query ref="scheduleForm$" :configs='schduleConfigs' :data='scheduleInfo' size='small' :label-width="100" style="max-width: 40vw;">
       </Query>
       <template #footer>
