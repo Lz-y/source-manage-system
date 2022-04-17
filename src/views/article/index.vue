@@ -96,7 +96,7 @@ const configs = ref<Array<QConfig>>([
 ])
 
 const columns = ref<Array<ColumnProps>>([
-  { attrs: { type: 'index', label: '序号' } },
+  { attrs: { type: 'index', label: '#' } },
   { attrs: { prop: 'url', label: '封面', }, _slot: true },
   { attrs: { prop: 'title', label: '标题', } },
   { attrs: { prop: 'classify', label: '类别', width: 50}},

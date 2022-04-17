@@ -67,7 +67,7 @@ const queryData = reactive({
   code: null
 })
 const columns = ref<Array<ColumnProps>>([
-  { attrs: { type: 'index', label: '序号' } },
+  { attrs: { type: 'index', label: '#' } },
   { attrs: { prop: 'ip', label: 'IP' } },
   { attrs: { prop: 'userAgent', label: '客户端' } },
   { attrs: { prop: 'url', label: '请求链接' }, _slot: true},

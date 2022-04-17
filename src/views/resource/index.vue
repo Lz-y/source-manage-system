@@ -114,7 +114,7 @@ const queryData = reactive({
   status: null
 })
 const columns = ref<Array<ColumnProps>>([
-  { attrs: { type: 'index', label: '序号' } },
+  { attrs: { type: 'index', label: '#' } },
   { attrs: { prop: 'name', label: '名称' }, _slot: true },
   { attrs: { prop: 'img', label: '封面' }, _slot: true },
   { attrs: { prop: 'classify', label: '所属类别' }, _slot: true },

@@ -73,13 +73,13 @@ const queryData = reactive({
 })
 
 const columns = ref<Array<ColumnProps>>([
-  { attrs: { type: 'index', label: '序号' } },
+  { attrs: { type: 'index', label: '#' } },
   { attrs: { prop: 'name', label: '名称' } },
-  { attrs: { prop: 'sequence', label: '优先级' } },
+  { attrs: { prop: 'sequence', label: '优先级', width: 80 } },
   { attrs: { prop: 'summary', label: '描述' } },
   { attrs: { prop: 'spend', label: '所需时间', width: 240} },
   { attrs: { prop: 'createTime', label: '创建时间', width: 180} },
-  { attrs: { prop: 'status', label: '计划状态', width: 90 }, _slot: true},
+  { attrs: { prop: 'status', label: '计划状态', width: 90 }, _slot: true },
   { attrs: { prop: 'operation', label: '操作', width: 140 }, _slot: true },
 ])
 

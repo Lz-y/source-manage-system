@@ -71,7 +71,7 @@ const queryData = reactive({
   replyStatus: null
 })
 const columns = ref<Array<ColumnProps>>([
-  { attrs: { type: 'index', label: '序号' } },
+  { attrs: { type: 'index', label: '#' } },
   { attrs: { prop: 'message', label: '消息' } },
   { attrs: { prop: 'replyContent', label: '回复内容' } },
   { attrs: { prop: 'createTime', label: '时间' } },

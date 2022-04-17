@@ -83,7 +83,7 @@ const configs = ref<Array<QConfig>>([
 ])
 
 const columns = ref<Array<ColumnProps>>([
-  { attrs: { type: "index", label: "序号" } },
+  { attrs: { type: "index", label: "#" } },
   { attrs: { prop: "account", label: "账号" } },
   { attrs: { prop: "nickName", label: "昵称" } },
   { attrs: { prop: "gender", label: "性别" }, _slot: true },

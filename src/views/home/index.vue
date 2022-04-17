@@ -42,7 +42,8 @@
 
 <script lang="ts">
 export default {
-  inheritAttrs: false
+  inheritAttrs: false,
+  name: 'Home'
 }
 </script>
 <script setup lang="ts">
