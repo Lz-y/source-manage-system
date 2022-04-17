@@ -93,7 +93,7 @@ declare interface Logs {
 }
 
 declare interface Project{
-  id: string
+  _id?: string
   name: string
   img?: string
   description: string
@@ -103,7 +103,7 @@ declare interface Project{
 }
 
 declare interface Dictionary {
-  _id: any
+  _id?: any
   name: string
   type: string,
   children?: Array<Dictionary>
@@ -114,9 +114,10 @@ declare interface Todo {
   finished: boolean
 }
 declare interface Schedule {
-  id?: string
+  _id?: string
   name: string
-  date: string[]
-  description: string
-  finished: 0 | 1 | 2
+  spend: string[]
+  summary: string
+  status: 0 | 1 | 2 | null
+  createTime?: string
 }
