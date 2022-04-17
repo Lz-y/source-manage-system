@@ -18,7 +18,16 @@
             </el-dropdown-menu>
           </template>
         </el-dropdown>
-        <el-button type="text" size="small" @click="remove(row._id)">删除</el-button>
+        <el-popconfirm confirm-button-text='确认'
+          cancel-button-text='取消'
+          :icon='InfoFilled'
+          icon-color='#fdbc00'
+          title="确认删除该计划？"
+          @confirm='remove(row._id)'>
+          <template #reference>
+            <el-button type='text' size="small">删除</el-button>
+          </template>
+        </el-popconfirm>
       </template>
     </CustomTable>
     <Pagination :total='20' />
@@ -40,7 +49,7 @@ export default {
 </script>
 <script setup lang="ts">
 import {ref, reactive, onMounted} from 'vue'
-import { Search, CirclePlus } from '@element-plus/icons-vue'
+import { Search, CirclePlus, InfoFilled } from '@element-plus/icons-vue'
 import { ElNotification } from 'element-plus'
 import dayjs from 'dayjs'
 

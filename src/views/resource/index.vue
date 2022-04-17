@@ -33,7 +33,16 @@
             <el-button type='text' size="small">{{row.status === 0 ? '恢复正常' : '失效'}}</el-button>
           </template>
         </el-popconfirm>
-        <el-button type='text' size="small" @click="delResource(row._id)">删除</el-button>
+        <el-popconfirm confirm-button-text='确认'
+          cancel-button-text='取消'
+          :icon='InfoFilled'
+          icon-color='#fdbc00'
+          title="确认删除该资源？"
+          @confirm='delResource(row._id)'>
+          <template #reference>
+            <el-button type='text' size="small">删除</el-button>
+          </template>
+        </el-popconfirm>
       </template>
     </CustomTable>
     <Pagination :total='20' />
