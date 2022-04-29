@@ -1,8 +1,8 @@
 <template>
 <div class="notice">
-  <el-dropdown trigger='click' placement='bottom-end'>
+  <el-dropdown trigger='click'>
     <span class="notice-badge">
-      <el-badge :value='noticeNum'>
+      <el-badge is-dot>
         <el-icon size='18'>
           <bell />
         </el-icon>
@@ -180,13 +180,9 @@ const noticesData: TabItem[] = [
     ]
   }
 ]
-const noticeNum = ref(0)
 const activeName = ref(noticesData[0].name)
 const tabs = ref(noticesData)
 
-tabs.value.forEach(notice => {
-  noticeNum.value += notice.list.length
-})
 </script>
 
 <style lang="scss">
