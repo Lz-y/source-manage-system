@@ -63,6 +63,7 @@ export const putMessage = wrap(URL.message.byId, 'put')
 export const deleteMessage = wrap(URL.message.byId, 'delete')
 
 export const getDicts = wrap(URL.dict.all,'get')
+export const getOneDict = wrap(URL.dict.one, 'get')
 export const createDict = wrap(URL.dict.one, 'post')
 export const putDict = wrap(URL.dict.byId, 'put')
 export const delDict = wrap(URL.dict.byId, 'delete')

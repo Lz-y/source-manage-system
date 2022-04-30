@@ -23,7 +23,7 @@
       </template>
     </CustomTable>
     <Pagination :total='pageTotal' />
-    <el-dialog v-model='visible' :title="`${isEdit ? '编辑' : '新增'}字典`" width="35%" top="25vh">
+    <el-dialog v-model='visible' :title="`${isEdit ? '编辑' : '新增'}字典`" width="35%" top="20vh">
       <el-form :model="dictForm" :rules="dictRules" ref="dictForm$" size="mini" label-width="90px">
 				<el-row :gutter="35">
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
@@ -42,28 +42,28 @@
 						</el-form-item>
 					</el-col>
 					<el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
-						<el-row :gutter="35" v-for="(v, k) in dictForm.children" :key="k">
+            <div style="width: 115px;text-align: right; margin-bottom: 10px;">
+              <span>字典属性</span>
+              <el-button type="primary" circle @click="onAddRow" style="margin-left: 10px;">
+                <el-icon :size='16'>
+                  <CirclePlus/>
+                </el-icon>
+              </el-button>
+            </div>
+						<el-row :gutter="25" v-for="(v, k) in dictForm.children">
 							<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
-								<el-form-item :prop="v.label">
-									<template #label>
-										<el-button type="primary" circle @click="onAddRow" v-if="k === 0">
-											<el-icon :size='16'>
-												<CirclePlus/>
-											</el-icon>
-										</el-button>
-										<el-button type="danger" circle @click="onDelRow(k)" v-else>
-											<el-icon :size='16'>
-												<Delete/>
-											</el-icon>
-										</el-button>
-										<span>字段</span>
-									</template>
-									<el-input v-model="v.label" style="width: 100%" placeholder="请输入字段名"> </el-input>
+								<el-form-item label="字段">
+									<el-input v-model="v.label" placeholder="请输入字段名"> </el-input>
 								</el-form-item>
 							</el-col>
 							<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
-								<el-form-item label="属性值" :prop="v.value">
-									<el-input v-model="v.value" style="width: 100%" placeholder="请输入属性值"> </el-input>
+								<el-form-item label="属性值">
+									<el-input v-model="v.value" style="max-width: 80%;margin-right: 10px;" placeholder="请输入属性值"> </el-input>
+                  <el-button type="danger" circle @click="onDelRow(k)">
+                    <el-icon :size='16'>
+                      <Delete/>
+                    </el-icon>
+                  </el-button>
 								</el-form-item>
 							</el-col>
 						</el-row>
@@ -89,7 +89,7 @@ export default {
 }
 </script>
 <script setup lang="ts">
-import { onMounted, reactive, ref, toRaw, watch, nextTick } from 'vue'
+import { onMounted, reactive, ref, toRaw, nextTick } from 'vue'
 import { Search, InfoFilled, CirclePlus, Delete } from '@element-plus/icons-vue'
 import dayjs from 'dayjs'
 
@@ -100,12 +100,19 @@ import Pagination from '@/components/pagination.vue'
 import {getDicts, createDict, putDict, delDict} from '@/api'
 import { ElNotification } from 'element-plus'
 
+const StatusOptions = [{label: '禁用', value: 0}, {label: '启用', value: 1}]
 const loading = ref<boolean>(false)
 const configs = ref<Array<QConfig>>([
-  { name: 'input', prop: 'name', attrs: {placeholder: '请输入字典名称', clearable: true}, },
+  { name: 'input', label: '字典名称/类型',  prop: 'name', attrs: {placeholder: '请输入字典名称/类型', clearable: true}, },
+  {
+    name: 'select', label: '状态', prop: 'status',
+    attrs: {placeholder: '请选择状态', clearable: true},
+    options: StatusOptions
+  },
 ])
 const queryData = reactive({
   name: null,
+  status: null
 })
 const columns = ref<Array<ColumnProps>>([
   { attrs: { label: '#', type: 'index' } },
