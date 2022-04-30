@@ -21,7 +21,7 @@ export const resource = {
   byId: '/api/resource/:id'
 }
 export const project = {
-  all: '/api/project',
+  all: '/api/projects',
   one: '/api/project',
   byId: '/api/project/:id'
 }

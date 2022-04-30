@@ -101,10 +101,12 @@ declare interface Project{
   _id?: string
   name: string
   img?: string
+  link: string
+  classify: string
   description: string
-  createTime: string
-  runingTime: string
-  runing: 0 | 1
+  createTime?: string
+  runingTime?: string
+  status: 0 | 1
 }
 
 declare interface Dictionary {
