@@ -7,7 +7,7 @@
 <script lang="ts">
 import { defineComponent, provide, PropType, getCurrentInstance } from 'vue'
 import Columns from './columns.vue'
-
+import { ColumnProps } from '#/global'
 export default defineComponent({
   name: 'CustomTable',
   props: {

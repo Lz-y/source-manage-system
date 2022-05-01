@@ -30,6 +30,7 @@ import {
   ref
 } from "vue"
 import { ElTableColumn } from "element-plus"
+import { ColumnProps } from '#/global'
 
 export default defineComponent({
   props: {

@@ -31,9 +31,9 @@
 </template>
 
 <script setup lang="ts">
-import {ref, nextTick} from 'vue'
+import {ref, nextTick, reactive} from 'vue'
 import CustomTable from '@/components/table/index.vue'
-import { reactive } from 'vue'
+import { ColumnProps, AnyTypeObject } from '#/global'
 
 const props = withDefaults(defineProps<{
   data: Array<any>

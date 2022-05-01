@@ -18,6 +18,7 @@
 <script lang="ts">
 import {defineComponent, ref, computed } from 'vue'
 import TodoItem from './item.vue'
+import { Todo } from '#/global'
 export default defineComponent({
   name: 'Todo',
   components: {

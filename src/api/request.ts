@@ -1,5 +1,6 @@
 import axios, {AxiosRequestConfig} from "axios"
 import {ElMessage, ElMessageBox} from 'element-plus'
+import {ResponseData} from '#/global'
 
 const serve = axios.create({
   baseURL: import.meta.env.BASE_URL,
