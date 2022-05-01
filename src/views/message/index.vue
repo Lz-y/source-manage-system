@@ -5,10 +5,10 @@
     </Query>
     <CustomTable v-loading="loading" :columns='columns' :data='list'>
       <template #replyStatus='{row}'>
-        <span :class="row.replyStatus === 0 ? 'no-reply' : 'available'">{{row.replyStatus === 0 ? '待回复' : '已回复'}}</span>
+        <span :class="row.replyStatus === 0 ? 'no-reply' : 'available'">{{ReplyStatusOptions[row.replyStatus].label }}</span>
       </template>
       <template #status='{row}'>
-        <span :class="row.status === 0 ? 'invalid' : 'available'">{{row.status === 0 ? '已失效' : '正常'}}</span>
+        <span :class="row.status === 0 ? 'invalid' : 'available'">{{StatusOptions[row.status].label}}</span>
       </template>
       <template #operation='{row}'>
         <el-button type='text' size="small" v-if="row.replyStatus === 0" @click="showReplyDislog(row)">回复</el-button>
@@ -24,9 +24,9 @@
         </el-popconfirm>
       </template>
     </CustomTable>
-    <Pagination :total='20' />
-    <el-dialog v-model='visible' title="回复" width="20%" top="35vh">
-      <Query :configs='encryptConfig' :data='encryptForm'></Query>
+    <Pagination :total='pageTotal' />
+    <el-dialog v-model='visible' title="回复" width="20%" top="35vh" :close-on-click-modal="false">
+      <Query ref="encryptForm$" :configs='encryptConfig' :data='encryptForm'></Query>
       <template #footer>
         <el-button size='small' @click="close">关闭</el-button>
         <el-button size='small' type="primary" @click="confirm">发布</el-button>
@@ -41,7 +41,7 @@ export default {
 }
 </script>
 <script setup lang="ts">
-import {ref, reactive, onMounted} from 'vue'
+import {ref, reactive, onMounted, nextTick} from 'vue'
 import { Search, InfoFilled } from '@element-plus/icons-vue'
 import { ElNotification } from 'element-plus'
 import dayjs from 'dayjs'
@@ -50,19 +50,22 @@ import Query from '@/components/query.vue'
 import CustomTable from '@/components/table/index.vue'
 import Pagination from '@/components/pagination.vue'
 
-import {getMessages, putMessage} from '@/api'
+import {getMessages, putMessage, getOneDict} from '@/api'
+import {QConfig, ColumnProps, Message, KeyMap} from '#/global'
 
+const StatusOptions = ref<Array<KeyMap>>([])
+const ReplyStatusOptions = ref<Array<KeyMap>>([])
 const configs = ref<Array<QConfig>>([
   { name: 'input', prop: 'title', label: '标题', attrs: {placeholder: '请输入标题', clearable: true}, },
   {
     name: 'select', label: '回复状态', prop: 'replyStatus',
     attrs: {placeholder: '请选择回复状态', clearable: true},
-    options: [{label: '待回复', value: 0}, {label: '已回复', value: 1}]
+    options: []
   },
   {
     name: 'select', label: '消息状态', prop: 'status',
     attrs: {placeholder: '请选择消息状态', clearable: true},
-    options: [{label: '已失效', value: 0}, {label: '正常', value: 1}]
+    options: []
   }
 ])
 const queryData = reactive({
@@ -90,6 +93,7 @@ const encryptForm = reactive({
   _id: null,
   reply: null
 })
+const encryptForm$ = ref()
 
 async function toggleStatus (row: Message) {
   try{
@@ -108,6 +112,9 @@ async function toggleStatus (row: Message) {
 function showReplyDislog (row: Message) {
   visible.value = true
   encryptForm._id = row._id as any
+  nextTick(() => {
+    encryptForm$.value.form$.$el.querySelector('.el-textarea__inner').focus()
+  })
 }
 function close () {
   visible.value = false
@@ -129,6 +136,17 @@ async function confirm () {
     close()
   }
 }
+async function getDicts () {
+  try {
+    const [replyStatus, status] = await Promise.all([getOneDict({type: 'SYS_MESSAGE_REPLY_STATUS'}), getOneDict({type: 'SYS_STATUS'})])
+    configs.value[1].options = replyStatus.data
+    configs.value[2].options = status.data
+    StatusOptions.value = status.data
+    ReplyStatusOptions.value = replyStatus.data
+  } catch (error) {
+    throw error
+  }
+}
 async function loadData() {
   loading.value = true
   try {
@@ -144,7 +162,11 @@ async function loadData() {
     loading.value = false
   }
 }
+async function initData() {
+  await getDicts()
+  await loadData()
+}
 onMounted(() => {
-  loadData()
+  initData()
 })
 </script>

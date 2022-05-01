@@ -25,16 +25,6 @@
           cancel-button-text='取消'
           :icon='InfoFilled'
           icon-color='#fdbc00'
-          :title="`是否${row.status === 0 ? '启动' : '暂停'}该项目？`"
-          @confirm='toggleRunning(row)'>
-          <template #reference>
-            <el-button type='text' size="small">{{row.status === 0 ? '启动' : '暂停'}}</el-button>
-          </template>
-        </el-popconfirm>
-        <el-popconfirm confirm-button-text='确认'
-          cancel-button-text='取消'
-          :icon='InfoFilled'
-          icon-color='#fdbc00'
           title="确认删除该项目？"
           @confirm='del(row._id)'>
           <template #reference>
@@ -44,7 +34,7 @@
       </template>
     </CustomTable>
     <Pagination :total='pageTotal' />
-    <el-dialog v-model="show" width="30%" :title="title" top="25vh">
+    <el-dialog v-model="show" width="30%" :title="title" top="25vh" :close-on-click-modal="false">
       <el-row>
         <el-col :md="8" :sm="6" :xs="4">
           <el-upload
@@ -87,11 +77,12 @@ import Query from '@/components/query.vue'
 import CustomTable from '@/components/table/index.vue'
 import Pagination from '@/components/pagination.vue'
 import {createProject, deleteProject, getProjects, putProject, getOneDict} from '@/api'
+import {QConfig, ColumnProps, Project, KeyMap} from '#/global'
 
 dayjs.extend(relativeTime)
 dayjs.locale('zh-cn')
 
-const StatusOptions = [{label: '未启动', value: 0}, {label: '运行中', value: 1}]
+const StatusOptions = ref<Array<KeyMap>>([])
 const configs = ref<Array<QConfig>>([
   { name: 'input', prop: 'title', label: '项目名称', attrs: {placeholder: '请输入项目名称', clearable: true}, },
   {
@@ -102,7 +93,7 @@ const configs = ref<Array<QConfig>>([
   {
     name: 'select', label: '状态', prop: 'status',
     attrs: {placeholder: '请选择状态', clearable: true},
-    options: StatusOptions
+    options: []
   }
 ])
 const queryData = reactive({
@@ -121,7 +112,7 @@ const columns = ref<Array<ColumnProps>>([
   { attrs: { prop: 'createTime', label: '创建时间', width: 165 } },
   { attrs: { prop: 'runingTime', label: '运行时间', width: 100 } },
   { attrs: { prop: 'status', label: '运行状态', width: 100 }, _slot: true},
-  { attrs: { prop: 'operation', label: '操作', width: 160 }, _slot: true },
+  { attrs: { prop: 'operation', label: '操作', width: 140 }, _slot: true },
 ])
 const list = ref<Array<Project>>([])
 const pageTotal = ref<number>(0)
@@ -148,7 +139,7 @@ const projectForm = ref<Array<QConfig>>([
   {
     name: 'select', label: '运行状态', prop: 'status',
     attrs: {placeholder: '请选择运行状态', clearable: true},
-    options: StatusOptions
+    options: []
   },
   {
     name: 'input', label: '项目简介', prop: 'description',
@@ -162,7 +153,7 @@ const curProject = reactive<Project>({
   link: '',
   description: '',
   classify: '',
-  status: 0
+  status: '0'
 })
 function beforeUpload () {
 
@@ -188,7 +179,7 @@ function edit(row: Project) {
     link: row.link,
     description: row.description,
     classify: row.classify,
-    status: row.status
+    status: row.status + ''
   })
 }
 
@@ -211,21 +202,6 @@ async function del (id: string) {
   }
 }
 
-async function toggleRunning (row: Project) {
-  try{
-  const {msg} = await putProject(row._id, {status: row.status === 0 ? 1: 0})
-    ElNotification({
-      title: 'success',
-      message: msg,
-      type: 'success',
-      duration: 3000
-    })
-    loadData()
-  } catch (error) {
-    throw error
-  }
-}
-
 function cancel () {
   show.value = false
   projectForm$.value.form$.clearValidate()
@@ -235,7 +211,7 @@ function cancel () {
     link: '',
     description: '',
     classify: '',
-    runing: 1
+    status: '0'
   })
   curProject._id && delete curProject._id
 }
@@ -278,18 +254,24 @@ async function loadData() {
     loading.value = false
   }
 }
-async function getClassifies () {
+async function getDicts () {
   try {
-    const {data} = await getOneDict({type: 'SYS_TAGS'})
-    configs.value[1].options = data
-    projectForm.value[2].options = data
+    const [classifies, status] = await Promise.all([getOneDict({type: 'SYS_TAGS'}), getOneDict({type: 'SYS_RUN_STATUS'})])
+    configs.value[1].options = classifies.data
+    configs.value[2].options = status.data
+    projectForm.value[2].options = classifies.data
+    projectForm.value[3].options = status.data
+    StatusOptions.value = status.data
   } catch (error) {
     throw error
   }
 }
+async function initData() {
+  await getDicts()
+  await loadData()
+}
 onMounted(() => {
-  loadData()
-  getClassifies()
+  initData()
 })
 </script>
 

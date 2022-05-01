@@ -2,7 +2,7 @@
   <div class="resource-manage-page">
     <Query :configs='configs' :data='queryData' size='small' inline>
       <el-button type='primary' :icon='Search'>查询</el-button>
-      <el-button :icon='CirclePlus' @click="addResource(0)">添加资源</el-button>
+      <el-button :icon='CirclePlus' @click="modifyResource(0)">添加资源</el-button>
     </Query>
     <CustomTable v-loading="loading" :columns='columns' :data='list'>
       <template #name='{row}'>
@@ -15,24 +15,13 @@
         <el-tag size='mini'>{{row.classify}}</el-tag>
       </template>
       <template #encrypt='{row}'>
-        <span :class="row.encrypt === 1 ? 'available' : 'encrypted'">{{row.encrypt === 0 ? '已加密' : '公开'}}</span>
+        <span :class="row.encrypt === 1 ? 'available' : 'encrypted'">{{EncryptStatusOptions[row.encrypt].label}}</span>
       </template>
       <template #status='{row}'>
-        <span :class="row.status === 0 ? 'invalid' : 'available'">{{row.status === 0 ? '已失效' : '可用'}}</span>
+        <span :class="row.status === 0 ? 'invalid' : 'available'">{{StatusOptions[row.status].label}}</span>
       </template>
       <template #operation='{row}'>
-        <el-button type='text' size="small" @click="addResource(1, row)">编辑</el-button>
-        <el-button type='text' size="small" @click="showEncryptDislog(row)">{{row.encrypt === 0 ? '公开' : '加密'}}</el-button>
-        <el-popconfirm confirm-button-text='确认'
-          cancel-button-text='取消'
-          :icon='InfoFilled'
-          icon-color='#fdbc00'
-          :title="`确定使该资源${row.status === 0 ? '可用' : '失效'}？`"
-          @confirm='toggleStatus(row)'>
-          <template #reference>
-            <el-button type='text' size="small">{{row.status === 0 ? '恢复正常' : '失效'}}</el-button>
-          </template>
-        </el-popconfirm>
+        <el-button type='text' size="small" @click="modifyResource(1, row)">编辑</el-button>
         <el-popconfirm confirm-button-text='确认'
           cancel-button-text='取消'
           :icon='InfoFilled'
@@ -45,16 +34,9 @@
         </el-popconfirm>
       </template>
     </CustomTable>
-    <Pagination :total='20' />
-    <el-dialog v-model='visible' title="请输入文件密码" width="20%" top="35vh">
-      <Query ref="encryptForm$" :configs='encryptConfig' :data='encryptForm' :rules='rules'></Query>
-      <template #footer>
-        <el-button size='small' @click="close">关闭</el-button>
-        <el-button size='small' type="primary" @click="confirm">确认</el-button>
-      </template>
-    </el-dialog>
-    <el-dialog v-model="showAddResource" title="添加资源" width="35%" top="25vh">
-      <el-row align="middle">
+    <Pagination :total='pageTotal' />
+    <el-dialog v-model="showEditDialog" title="添加资源" width="35%" top="25vh" :close-on-click-modal="false">
+      <el-row>
         <el-col :xs="4" :sm="6" :md="6">
           <el-upload
             class="avatar-upload"
@@ -67,12 +49,12 @@
           </el-upload>
         </el-col>
         <el-col :xs="20" :sm="18" :md="16">
-          <Query ref="resourceForm$" :configs="resourceConfig" :data="resource" :rules="createResourceRules" label-width="80px" size="small" status-icon></Query>
+          <Query ref="resourceForm$" :configs="editConfig" :data="resource" :rules="editRules" label-width="80px" size="small" status-icon></Query>
         </el-col>
       </el-row>
       <template #footer>
-        <el-button size="mini" @click="cancelAdd">取消</el-button>
-        <el-button type="primary" size="mini" @click="saveResource">保存</el-button>
+        <el-button size="mini" @click="cancel">取消</el-button>
+        <el-button type="primary" size="mini" @click="save">保存</el-button>
       </template>
     </el-dialog>
   </div>
@@ -84,7 +66,7 @@ export default {
 }
 </script>
 <script setup lang="ts">
-import {ref, reactive, nextTick, onMounted, toRaw} from 'vue'
+import {ref, reactive, nextTick, onMounted} from 'vue'
 import { Search, CirclePlus, InfoFilled, Plus } from '@element-plus/icons-vue'
 import { ElNotification } from 'element-plus'
 import dayjs from 'dayjs'
@@ -93,19 +75,22 @@ import Query from '@/components/query.vue'
 import CustomTable from '@/components/table/index.vue'
 import Pagination from '@/components/pagination.vue'
 
-import {getResources, putResource, createResource, deleteResource} from '@/api'
+import {getResources, putResource, createResource, deleteResource, getOneDict} from '@/api'
+import {QConfig, ColumnProps, KeyMap, ResourceFile} from '#/global'
 
+const StatusOptions = ref<Array<KeyMap>>([])
+const EncryptStatusOptions = ref<Array<KeyMap>>([])
 const configs = ref<Array<QConfig>>([
   { name: 'input', prop: 'name', label: '名称', attrs: {placeholder: '请输入资源名称', clearable: true}, },
   {
     name: 'select', label: '加密状态', prop: 'encrypt',
     attrs: {placeholder: '请选择资源加密状态', clearable: true},
-    options: [{label: '公开', value: 0}, {label: '已加密', value: 1}]
+    options: []
   },
   {
     name: 'select', label: '状态', prop: 'status',
     attrs: {placeholder: '请选择资源状态', clearable: true},
-    options: [{label: '已失效', value: 0}, {label: '正常', value: 1}]
+    options: []
   }
 ])
 const queryData = reactive({
@@ -113,6 +98,7 @@ const queryData = reactive({
   encrypt: null,
   status: null
 })
+
 const columns = ref<Array<ColumnProps>>([
   { attrs: { type: 'index', label: '#' } },
   { attrs: { prop: 'name', label: '名称' }, _slot: true },
@@ -128,47 +114,35 @@ const list = ref<Array<ResourceFile>>([])
 const pageTotal = ref<number>(0)
 const loading = ref<boolean>(false)
 
-const visible = ref<boolean>(false)
-const encryptConfig = ref<Array<QConfig>>([
-  {name: 'input', prop: 'psw', attrs: {type: 'password', showPassword: true, placeholder: '请输入文件加密密码'}}
-])
-const encryptForm = reactive({
-  _id: '',
-  psw: '',
-  encrypt: 1
-})
-const encryptForm$ = ref()
-const rules = reactive({
-  encrypt: [
-    {required: true, message: '请输入文件加密密码', trigger: 'blur'},
-    {validator: validatorPsw, trigger: ['change', 'blur']},
-  ]
-})
-
-const showAddResource = ref<boolean>(false)
-const resource = reactive<Partial<ResourceFile>>({
+const showEditDialog = ref<boolean>(false)
+const resource = reactive<ResourceFile>({
   name: '',
   img: '',
   classify: '',
   summary: '',
   link: '',
-  status: 1,
+  status: '1',
   encrypt: 1
 })
 const isEdit = ref<boolean>(false)
 const resourceForm$ = ref()
-const createResourceRules = reactive({
+const editRules = reactive({
   name: [{required: true, message: '请输入资源名称', trigger: 'blur'}],
   classify: [{required: true, message: '请选择分类', trigger: 'blur'}],
+  psw: [
+    {required: true, message: '请输入文件加密密码', trigger: 'blur'},
+    {validator: validatorPsw, trigger: ['change', 'blur']},
+  ]
 })
-const resourceConfig = ref<Array<QConfig>>([
+const editConfig = ref<Array<QConfig>>([
   {name: 'input', prop: 'name', label: '名称', attrs: {placeholder: '请填写资源名称', clearable: true}},
   {name: 'input', prop: 'link', label: '链接', attrs: {placeholder: '请填写链接', clearable: true}},
-  {name: 'select', prop: 'classify', label: '分类', attrs: {placeholder: '请选择资源分类'}, options: [{label: 'vue', value: 'vue'}, {label: 'react', value: 'react'}]},
+  {name: 'select', prop: 'classify', label: '分类', attrs: {placeholder: '请选择资源分类'}, options: []},
   {name: 'input', prop: 'summary', label: '简介', attrs: {type: 'textarea', placeholder: '请输入简介'}},
-  {name: 'switch', prop: 'encrypt', label: '是否加密', attrs: {'active-value': 0, 'inactive-value': 1, 'active-text': '否', 'inactive-text': '是', 'inline-prompt': true}, events: {change: switchEncrypt}},
-  {name: 'select', prop: 'status', label: '状态', attrs: {placeholder: '请选择资源状态', clearable: true}, options: [{label: '已失效', value: 0}, {label: '正常', value: 1}]}
+  {name: 'select', prop: 'status', label: '状态', attrs: {placeholder: '请选择资源状态', clearable: true}, options: []},
+  {name: 'switch', prop: 'encrypt', label: '是否加密', attrs: {'active-value': 0, 'inactive-value': 1, 'active-text': '是', 'inactive-text': '否', 'inline-prompt': true}, events: {change: switchEncrypt}}
 ])
+
 function validatorPsw (rule: any, value: string, callback: Function) {
   if (!/^[a-zA-Z0-9\.@#]{6,10}$/g.test(value)) {
     callback(new Error('仅能输入4-8位大小写字母、数字和.#@'))
@@ -176,11 +150,28 @@ function validatorPsw (rule: any, value: string, callback: Function) {
     callback()
   }
 }
-function addResource(type: 0 | 1, row?: ResourceFile) {
-  showAddResource.value = true
+function modifyResource(type: 0 | 1, row?: ResourceFile) {
+  showEditDialog.value = true
   if (type === 1) {
     isEdit.value = true
-    Object.assign(resource, row)
+    Object.assign(resource, {
+      _id: row?._id,
+      name: row?.name,
+      img: row?.img,
+      classify: row?.classify,
+      summary: row?.summary,
+      link: row?.link,
+      status: row?.status + '',
+      encrypt: row?.encrypt
+    })
+    if (row?.encrypt === 0) {
+      editConfig.value.push({
+        name: 'input',
+        prop: 'psw',
+        label: '密码',
+        attrs: {type: 'password', placeholder: '请输入密码'}
+      })
+    }
   }
 }
 async function delResource(id: string){
@@ -207,19 +198,20 @@ function uploadSuccess () {
 
 function switchEncrypt (state: boolean) {
   nextTick(() => {
-    if (state) {
-      resourceConfig.value.splice(4, 0, {name: 'input', prop: 'psw', label: '密码', attrs: {type: 'password', placeholder: '请输入密码'}})
-      Object.assign(createResourceRules,{psw: [
-        {required: true, message: '请输入文件加密密码', trigger: 'blur'},
-        {validator: validatorPsw, trigger: ['change', 'blur']},
-      ]})
+    if (!state) {
+      editConfig.value.push({
+        name: 'input',
+        prop: 'psw',
+        label: '密码',
+        attrs: {type: 'password', placeholder: '请输入密码'}
+      })
     } else {
-      resourceConfig.value.splice(4, 1)
+      editConfig.value.pop()
     }
   })
 }
 
-function cancelAdd () {
+function cancel () {
   resourceForm$.value.form$.clearValidate()
   Object.assign(resource, {
     name: '',
@@ -227,18 +219,21 @@ function cancelAdd () {
     classify: '',
     summary: '',
     link: '',
-    status: 1,
+    status: '1',
     encrypt: 1
   })
   resource._id && delete resource._id
-  resource.createTime && delete resource.createTime
-  showAddResource.value = false
+  showEditDialog.value = false
   isEdit.value = false
 }
 
-async function saveResource () {
+async function save () {
   try {
     let res
+    const valid = await resourceForm$.value.form$.validate()
+    if (!valid) {
+      return false
+    }
     if (isEdit.value) {
       res = await putResource(resource._id, resource)
     } else {
@@ -251,52 +246,24 @@ async function saveResource () {
       duration: 3000
     })
     loadData()
+    cancel()
   } catch (error) {
+    console.error(error)
     throw error
-  } finally {
-    cancelAdd()
   }
 }
 
-function showEncryptDislog (row: ResourceFile) {
-  visible.value = true
-  encryptForm._id = row._id!
-  encryptForm.encrypt = row.encrypt
-}
-async function toggleStatus (row: ResourceFile) {
-  try{
-  const {msg} = await putResource(row._id, {status: row.status === 0 ? 1: 0})
-    ElNotification({
-      title: 'success',
-      message: msg,
-      type: 'success',
-      duration: 3000
-    })
-    loadData()
-  } catch (error) {
-    throw error
-  }
-}
-function close () {
-  encryptForm$.value.form$.clearValidate()
-  visible.value = false
-  Object.assign(encryptForm, {_id: '', encrypt: 1, psw: ''})
-}
-async function confirm () {
+async function getDicts () {
   try {
-    const params = {psw: encryptForm.psw, encrypt: encryptForm.encrypt === 1 ? 0 : 1}
-    const {msg} = await putResource(encryptForm._id, params)
-    ElNotification({
-      title: 'success',
-      message: msg,
-      type: 'success',
-      duration: 3000
-    })
-    loadData()
+    const [encryptStatus, resourceStatus, tags] = await Promise.all([getOneDict({type: 'SYS_ENCRYPT_STATUS'}), getOneDict({type: 'SYS_RESOURCE_STATUS'}), getOneDict({type: 'SYS_TAGS'})])
+    configs.value[1].options = encryptStatus.data
+    configs.value[2].options = resourceStatus.data
+    editConfig.value[2].options = tags.data
+    editConfig.value[4].options = resourceStatus.data
+    StatusOptions.value = resourceStatus.data
+    EncryptStatusOptions.value = encryptStatus.data
   } catch (error) {
     throw error
-  } finally {
-    close()
   }
 }
 async function loadData() {
@@ -314,8 +281,12 @@ async function loadData() {
     loading.value = false
   }
 }
+async function initData () {
+  await getDicts()
+  await loadData()
+}
 onMounted(() => {
-  loadData()
+  initData()
 })
 </script>
 

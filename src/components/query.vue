@@ -51,7 +51,8 @@
 
 <script lang="ts">
 import { ref, defineExpose } from 'vue'
-
+import {  ElFormContext } from 'element-plus'
+import {QConfig} from '#/global'
 export default {
   inheritAttrs: false
 }
@@ -62,7 +63,7 @@ defineProps<{
   configs: QConfig[],
   data: any
 }>()
-const form$ = ref()
+const form$ = ref<ElFormContext>()
 
 defineExpose({
   form$

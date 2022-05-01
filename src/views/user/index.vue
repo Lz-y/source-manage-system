@@ -3,16 +3,13 @@
     <Query :configs="configs" :data="formData" size="small" inline>
       <el-button type="primary" :icon="Search">查询</el-button>
       <el-button :icon="CirclePlus" @click="addUser">添加用户</el-button>
-      <el-button>导出用户数据</el-button>
     </Query>
     <CustomTable v-loading="loading" :columns="columns" :data="list">
       <template #gender="{ row }">
         <span v-if="genderOptions[row.gender]">{{genderOptions[row.gender].label}}</span>
       </template>
       <template #status="{ row }">
-        <span :class="row.status === 0 ? 'invalid' : 'available'">{{
-          row.status === 0 ? "已失效" : "可用"
-        }}</span>
+        <span :class="row.status === 0 ? 'invalid' : 'available'">{{statusOptions[row.status].label}}</span>
       </template>
       <template #operation="{ row }">
         <el-button type="text" size="small" @click="edit(row)">修改</el-button>
@@ -24,7 +21,7 @@
         </el-popconfirm>
       </template>
     </CustomTable>
-    <pagination :total="10" />
+    <pagination :total="pageTotal" />
     <el-dialog v-model="show" width="30%" :title="title" top="30vh">
       <el-row align="middle">
         <el-col :md="8" :sm="6" :xs="4">
@@ -41,7 +38,7 @@
           </el-upload>
         </el-col>
         <el-col :span="16">
-          <Query ref="userForm$" :configs="userForm" :data="curUser" label-width="80px" size="small"></Query>
+          <Query ref="userForm$" :configs="userConfig" :data="curUser" label-width="80px" size="small"></Query>
         </el-col>
       </el-row>
       <template #footer>
@@ -66,9 +63,11 @@ import dayjs from 'dayjs'
 import Query from '@/components/query.vue'
 import CustomTable from '@/components/table/index.vue'
 import pagination from '@/components/pagination.vue'
-import {getUsers, deleteUser, putUser} from '@/api'
 
-const statusOptions = [{label: '已失效', value: 0}, {label: '可用', value: 1}]
+import {QConfig, ColumnProps, User, KeyMap} from '#/global'
+import {getUsers, deleteUser, putUser, getOneDict} from '@/api'
+
+const statusOptions = ref<Array<KeyMap>>([])
 const genderOptions = [{label: '女', value: 0}, {label: '男', value: 1}]
 const configs = ref<Array<QConfig>>([
   {
@@ -78,7 +77,7 @@ const configs = ref<Array<QConfig>>([
   {
     name: 'select', label: '状态', prop: 'status',
     attrs: {placeholder: '请选择用户状态', clearable: true},
-    options: statusOptions
+    options: []
   }
 ])
 
@@ -105,7 +104,7 @@ const loading = ref<boolean>(false)
 const isEdit = ref<boolean>(false)
 const show = ref<boolean>(false)
 const title = ref<string>()
-const userForm = ref<Array<QConfig>>([
+const userConfig = ref<Array<QConfig>>([
   {
     name: 'input', label: '账号', prop: 'account',
     attrs: {placeholder: '请输入用户账号', clearable: true, disabled: isEdit}
@@ -126,7 +125,7 @@ const userForm = ref<Array<QConfig>>([
   {
     name: 'select', label: '状态', prop: 'status',
     attrs: {placeholder: '请选择用户状态', clearable: true},
-    options: statusOptions
+    options: []
   }
 ])
 const userForm$ = ref()
@@ -136,7 +135,7 @@ const curUser = reactive<User>({
   gender: null,
   avatar: '',
   email: '',
-  status: 1
+  status: '1'
 })
 function addUser (){
   show.value = true
@@ -182,7 +181,7 @@ function cancel () {
     avatar: '',
     gender: null,
     email: '',
-    status: 1
+    status: '1'
   })
   curUser._id && delete curUser._id
 }
@@ -218,7 +217,7 @@ async function loadData() {
   loading.value = true
   try {
     const {result: {data, total}} = await getUsers(formData)
-    data.forEach((item: Schedule) => {
+    data.forEach((item: User) => {
       item.createTime = dayjs(item.createTime!).format('YYYY-MM-DD HH:mm:ss')
     })
     list.value = data
@@ -229,9 +228,22 @@ async function loadData() {
     loading.value = false
   }
 }
-
+async function getDicts () {
+  try {
+    const {data}= await getOneDict({type: 'SYS_STATUS'})
+    configs.value[1].options = data
+    userConfig.value[4].options = data
+    statusOptions.value = data
+  } catch (error) {
+    throw error
+  }
+}
+async function initData() {
+  await getDicts()
+  await loadData()
+}
 onMounted(() => {
-  loadData()
+  initData()
 })
 </script>
 

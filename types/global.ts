@@ -1,8 +1,8 @@
-declare interface AnyTypeObject {
+export interface AnyTypeObject {
   [k: string]: any
 }
 // query form config props
-declare interface QConfig {
+export interface QConfig {
   name: 'input' | 'input-number' | 'select' | 'date-picker' | 'checkbox' | 'radio' | 'switch' | 'rate'
   prop: string
   label?: string
@@ -13,7 +13,7 @@ declare interface QConfig {
   attrs?: AnyTypeObject
 }
 // table column config props
-declare interface ColumnProps {
+export interface ColumnProps {
   attrs: {
     type?: 'index' | 'selection' | 'expand'
     prop?: string
@@ -23,31 +23,31 @@ declare interface ColumnProps {
   _slot?: boolean
 }
 // tab component config props
-declare interface TabsProps{
+export interface TabsProps{
   name: string
   label: string
   component: any
   show: boolean
 }
-declare interface ResponseData {
+export interface ResponseData {
   code: number
   msg: string
   result: any
 }
-declare interface User {
+export interface User {
   _id?: string
   account: string
   nickName: string
   gender: 0 | 1 | null
   email: string
   avatar?: string
-  status: 0 | 1
+  status: '0' | '1'
   createTime?: string
 }
 
-declare interface Article {
+export interface Article {
   _id?: any
-  url?: string
+  img?: string
   title: string
   classify: string
   tags: Array<string>
@@ -62,20 +62,20 @@ declare interface Article {
   content: string
 }
 
-declare interface ResourceFile {
+export interface ResourceFile {
   _id?: string
   name: string
   img?: string
   link: string
   classify: string
   summary: string
-  status: 0 | 1
+  status: '0' | '1'
   encrypt: 0 | 1
   psw?: string
-  createTime: string
+  createTime?: string
 }
 
-declare interface Message {
+export interface Message {
   _id?: string
   title: string
   content: string
@@ -86,7 +86,7 @@ declare interface Message {
   createTime: string
 }
 
-declare interface Logs {
+export interface Logs {
   _id?: string
   userAgent: string
   ip: string
@@ -97,7 +97,7 @@ declare interface Logs {
   requestTime: string
 }
 
-declare interface Project{
+export interface Project{
   _id?: string
   name: string
   img?: string
@@ -106,27 +106,35 @@ declare interface Project{
   description: string
   createTime?: string
   runingTime?: string
-  status: 0 | 1
+  status: '0' | '1'
 }
 
-declare interface Dictionary {
+export interface Dictionary {
   _id?: any
   name: string
-  type: string,
-  children?: Array<Dictionary>
-  createTime: string
+  type: string
+  children?: Array<KeyMap>
+  createTime?: string
+  status: 0 | 1
+  description?: string
 }
 
-declare interface Todo {
+export interface Todo {
   name: string
   finished: boolean
 }
-declare interface Schedule {
+export interface Schedule {
   _id?: string
   name: string
   spend: string[]
+  relativeTime?: string
   summary: string
-  status: 0 | 1 | 2 | null
+  status: '0' | '1' | '2' | null
   sequence: number
   createTime?: string
+}
+export interface KeyMap {
+  key: string
+  label: string
+  value: any
 }

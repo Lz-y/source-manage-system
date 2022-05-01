@@ -85,21 +85,14 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/project',
     component: () => import('@/layout/index.vue'),
-    meta: {title: '项目管理', icon: 'project', auth: true},
     redirect: '/project/list',
     children: [
       {
-        path: 'list',
+        path: '',
         name: 'project',
         component: () => import('@/views/project/index.vue'),
-        meta: { title: '列表', hidden: true}
-      },
-      {
-        path: 'detail/:id',
-        name: 'projectDetail',
-        component: () => import('@/views/project/detail.vue'),
-        meta: { title: '详情', hidden: true}
-      },
+        meta: {title: '项目管理', icon: 'project', auth: true},
+      }
     ]
   },
   {

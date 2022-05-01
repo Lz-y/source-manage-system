@@ -1,7 +1,7 @@
 <template>
   <div class="article-manage-page">
     <Query :configs="configs" :data="formData" size='small' inline>
-      <el-button type='primary' :icon='Search' @click="query">查询</el-button>
+      <el-button type='primary' :icon='Search' @click="getAllArticle">查询</el-button>
       <el-button>导出文章数据</el-button>
     </Query>
     <CustomTable :columns="columns" :data='tableData' v-loading="loading" stripe>
@@ -14,10 +14,10 @@
         </div>
       </template>
       <template #encrypt='{row}'>
-        <span :class="row.encrypt === 1 ? 'available' : 'encrypted'">{{row.encrypt === 1 ? '公开' : '已加密'}}</span>
+        <span :class="row.encrypt === 1 ? 'available' : 'encrypted'">{{EncryptStatusOptions[row.encrypt].label}}</span>
       </template>
       <template #status='{row}'>
-        <span :class="row.status === 0 ? 'no-reply' : 'available'">{{row.status === 0 ? '草稿' : '已发布'}}</span>
+        <span :class="row.status === 0 ? 'no-reply' : 'available'">{{StatusOptions[row.status].label}}</span>
       </template>
       <template #operation='{row}'>
         <el-button type='text' size='small' @click="showEncryptDislog(row)">{{row.encrypt === 0 ? '公开' : '加密'}}</el-button>
@@ -51,7 +51,7 @@ export default {
 }
 </script>
 <script setup lang="ts">
-import { reactive, ref, onMounted, unref, toRaw } from 'vue'
+import { reactive, ref, onMounted } from 'vue'
 import { Search, InfoFilled } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router'
 import {ElNotification} from 'element-plus'
@@ -60,10 +60,14 @@ import dayjs from 'dayjs'
 import Query from '@/components/query.vue'
 import CustomTable from '@/components/table/index.vue'
 import pagination from '@/components/pagination.vue'
-import {getArticles, putArticle} from '@/api'
+
+import {QConfig, ColumnProps, Article, KeyMap} from '#/global'
+import {getArticles, putArticle, getOneDict} from '@/api'
 
 const router = useRouter()
 const classifyOptions = [{label: 'blog', value: 'blog'}, {label: '笔记', value: 'note'}, {label: '日记', value: 'daily'}]
+const StatusOptions = ref<Array<KeyMap>>([])
+const EncryptStatusOptions = ref<Array<KeyMap>>([])
 const configs = ref<Array<QConfig>>([
   {
     name: 'input', label: '标题', prop: 'title',
@@ -78,19 +82,19 @@ const configs = ref<Array<QConfig>>([
   {
     name: 'select', label: '标签', prop: 'tags',
     attrs: {placeholder: '请选择标签', clearable: true, multiple: true, multipleLimit: 2},
-    options: [{label: 'vue', value: 'vue'}, {label: 'react', value: 'react'}, {label: 'node', value: 'node'}],
+    options: [],
     events: {change: getAllArticle}
   },
   {
     name: 'select', label: '加密状态', prop: 'encrypt',
     attrs: {placeholder: '请选择加密状态', clearable: true},
-    options: [{label: '已加密', value: 0}, {label: '未加密', value: 1}],
+    options: [],
     events: {change: getAllArticle}
   },
   {
     name: 'select', label: '状态', prop: 'status',
     attrs: {placeholder: '请选择状态', clearable: true},
-    options: [{label: '草稿', value: 0}, {label: '已发布', value: 1}],
+    options: [],
     events: {change: getAllArticle}
   }
 ])
@@ -144,7 +148,6 @@ const pageTotal = ref<number>(0)
 
 async function toggleStatus (row: Article) {
   await modifyArticle(row._id, {status: row.status === 0 ? 1 : 0}, `该文章${row.status === 0 ? '发布' : '下架'}成功`)
-  await getAllArticle()
 }
 function showEncryptDislog (row: Article) {
   visible.value = true
@@ -163,7 +166,6 @@ async function confirm () {
      return false
     }
     await modifyArticle(encryptForm.id, {psw: encryptForm.psw!, encrypt: encryptForm.encrypt!}, `${encryptForm.encrypt! === 0 ? '加密' : '公开'}成功`)
-    await getAllArticle()
   } catch (error) {
     throw error
   } finally {
@@ -173,9 +175,7 @@ async function confirm () {
 function jumpTo (row: Article) {
   router.push({name: 'write', query: {id: row._id}})
 }
-function query () {
-  getAllArticle()
-}
+
 async function getAllArticle () {
   loading.value = true
   try {
@@ -197,7 +197,7 @@ async function getAllArticle () {
     loading.value = false
   }
 }
-const modifyArticle = async (id: any, data: Partial<Article>, message: string) => {
+async function modifyArticle (id: any, data: Partial<Article>, message: string) {
   try {
     await putArticle(id, data)
     ElNotification({
@@ -206,12 +206,29 @@ const modifyArticle = async (id: any, data: Partial<Article>, message: string) =
       type: 'success',
       duration: 3000
     })
+    getAllArticle()
   } catch (error) {
     throw error
   }
 }
+async function getDicts () {
+  try {
+    const [tags, encryptStatus, articleStatus] = await Promise.all([getOneDict({type: 'SYS_TAGS'}), getOneDict({type: 'SYS_ENCRYPT_STATUS'}), getOneDict({type: 'SYS_POST_STATUS'})])
+    configs.value[2].options = tags.data
+    configs.value[3].options = encryptStatus.data
+    configs.value[4].options = articleStatus.data
+    StatusOptions.value = articleStatus.data
+    EncryptStatusOptions.value = encryptStatus.data
+  } catch (error) {
+    throw error
+  }
+}
+async function initData() {
+  await getDicts()
+  await getAllArticle()
+}
 onMounted (() => {
-  getAllArticle()
+  initData()
 })
 </script>
 

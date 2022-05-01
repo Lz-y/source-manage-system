@@ -23,7 +23,7 @@
       </template>
     </CustomTable>
     <Pagination :total='pageTotal' />
-    <el-dialog v-model='visible' :title="`${isEdit ? '编辑' : '新增'}字典`" width="35%" top="20vh">
+    <el-dialog v-model='visible' :title="`${isEdit ? '编辑' : '新增'}字典`" width="40%" top="20vh" :close-on-click-modal="false">
       <el-form :model="dictForm" :rules="dictRules" ref="dictForm$" size="mini" label-width="90px">
 				<el-row :gutter="35">
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
@@ -50,14 +50,19 @@
                 </el-icon>
               </el-button>
             </div>
-						<el-row :gutter="25" v-for="(v, k) in dictForm.children">
-							<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
-								<el-form-item label="字段">
-									<el-input v-model="v.label" placeholder="请输入字段名"> </el-input>
+						<el-row :gutter="20" v-for="(v, k) in dictForm.children">
+							<el-col :xs="24" :sm="8" :md="8" :lg="8" :xl="8">
+								<el-form-item label="标签名">
+									<el-input v-model="v.label" placeholder="请输入标签名"> </el-input>
 								</el-form-item>
 							</el-col>
-							<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
-								<el-form-item label="属性值">
+              <el-col :xs="24" :sm="6" :md="6" :lg="6" :xl="6">
+								<el-form-item label="字段" label-width="40px">
+									<el-input v-model="v.key" placeholder="请输入字段"> </el-input>
+								</el-form-item>
+							</el-col>
+              <el-col :xs="24" :sm="10" :md="10" :lg="10" :xl="10">
+								<el-form-item label="属性值" label-width="60px">
 									<el-input v-model="v.value" style="max-width: 80%;margin-right: 10px;" placeholder="请输入属性值"> </el-input>
                   <el-button type="danger" circle @click="onDelRow(k)">
                     <el-icon :size='16'>
@@ -92,13 +97,14 @@ export default {
 import { onMounted, reactive, ref, toRaw, nextTick } from 'vue'
 import { Search, InfoFilled, CirclePlus, Delete } from '@element-plus/icons-vue'
 import dayjs from 'dayjs'
+import { ElNotification } from 'element-plus'
 
 import Query from '@/components/query.vue'
 import CustomTable from '@/components/table/index.vue'
 import Pagination from '@/components/pagination.vue'
 
-import {getDicts, createDict, putDict, delDict} from '@/api'
-import { ElNotification } from 'element-plus'
+import {getDicts, createDict, putDict, delDict, getOneDict} from '@/api'
+import {QConfig, ColumnProps, Dictionary} from '#/global'
 
 const StatusOptions = [{label: '禁用', value: 0}, {label: '启用', value: 1}]
 const loading = ref<boolean>(false)
@@ -128,13 +134,13 @@ const list = ref<Array<Partial<Dictionary>>>([])
 const isEdit = ref<boolean>(false)
 const visible = ref<boolean>(false)
 
-const dictForm = reactive({
+const dictForm = reactive<Dictionary>({
   _id: null,
-  name: null,
+  name: '',
   type: 'SYS_',
   status: 1,
   children: [
-    {label: '', value: ''}
+    {label: '', value: '', key: ''}
   ],
   description: '',
 })
@@ -150,11 +156,11 @@ function addDict () {
   isEdit.value = false
 }
 function onAddRow () {
-  dictForm.children.push({label: '', value: ''})
+  dictForm.children!.push({label: '', value: '', key: ''})
 }
 
 function onDelRow (i: number) {
-  dictForm.children.splice(i, 1)
+  dictForm.children!.splice(i, 1)
 }
 
 function close () {
@@ -166,7 +172,7 @@ function close () {
       name: null,
       type: 'SYS_',
       status: 1,
-      children: [{label: '', value: ''}],
+      children: [{label: '', value: '', key: ''}],
       description: ''
     })
   })
@@ -202,7 +208,14 @@ async function confirm () {
 function editDict (row: Dictionary) {
   visible.value = true
   isEdit.value = true
-  Object.assign(dictForm, row)
+  Object.assign(dictForm, {
+    _id: row._id,
+    name: row.name,
+    type: row.type,
+    status: row.status,
+    children: row.children,
+    description: row.description
+  })
 }
 
 async function deleteDict (row: Dictionary) {
@@ -236,7 +249,19 @@ async function loadData() {
     loading.value = false
   }
 }
+async function getDictStatus () {
+  try {
+    const {data} = await getOneDict({type: 'SYS_STATUS'})
+    configs.value[1].options = data
+  } catch (error) {
+    throw error
+  }
+}
+async function initData() {
+  await getDictStatus()
+  await loadData()
+}
 onMounted(() => {
-  loadData()
+  initData()
 })
 </script>

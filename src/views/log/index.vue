@@ -8,7 +8,7 @@
         <span :class="row.code === 0 ? 'invalid' : 'available'">{{row.code}}</span>
       </template>
       <template #status='{row}'>
-        <span :class="row.status === 0 ? 'available' : 'invalid'">{{row.status === 0 ? '未加入黑名单' : '已加入黑名单'}}</span>
+        <span :class="row.status === 0 ? 'available' : 'invalid'">{{StatusOptions[row.status].label}}</span>
       </template>
       <template #operation='{row}'>
         <el-popconfirm confirm-button-text='确认'
@@ -42,8 +42,10 @@ import Query from '@/components/query.vue'
 import CustomTable from '@/components/table/index.vue'
 import Pagination from '@/components/pagination.vue'
 
-import {getLogs, putLog} from '@/api'
+import {getLogs, putLog, getOneDict} from '@/api'
+import {QConfig, ColumnProps, Logs, KeyMap} from '#/global'
 
+const StatusOptions = ref<Array<KeyMap>>([])
 const configs = ref<Array<QConfig>>([
   {
     name: 'select', label: '客户端', prop: 'userAgent',
@@ -58,7 +60,7 @@ const configs = ref<Array<QConfig>>([
   {
     name: 'select', label: '状态', prop: 'code',
     attrs: {placeholder: '请选择状态', clearable: true},
-    options: [{label: '已加入黑名单', value: 0}, {label: '未加入黑名单', value: 1}]
+    options: []
   }
 ])
 const queryData = reactive({
@@ -94,7 +96,15 @@ async function toggleStatus (row: Logs) {
     throw error
   }
 }
-
+async function getDictStatus () {
+  try {
+    const {data} = await getOneDict({type: 'SYS_LOG_STATUS'})
+    configs.value[2].options = data
+    StatusOptions.value = data
+  } catch (error) {
+    throw error
+  }
+}
 async function loadData() {
   loading.value = true
   try {
@@ -111,6 +121,7 @@ async function loadData() {
   }
 }
 onMounted(() => {
+  getDictStatus()
   loadData()
 })
 </script>
