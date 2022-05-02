@@ -1,9 +1,9 @@
 <template>
-  <div class="logs-manage-page">
+  <div class="logs-manage-page" v-loading="loading">
     <Query :configs='configs' :data='queryData' size='small' inline>
       <el-button type='primary' :icon='Search' size="small">查询</el-button>
     </Query>
-    <CustomTable v-loading="loading" :columns='columns' :data='list'>
+    <CustomTable :columns='columns' :data='list'>
       <template #code='{row}'>
         <span :class="row.code === 0 ? 'invalid' : 'available'">{{row.code}}</span>
       </template>

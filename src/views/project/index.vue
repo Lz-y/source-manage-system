@@ -1,10 +1,10 @@
 <template>
-  <div class="project-manage-page">
+  <div class="project-manage-page" v-loading="loading">
     <Query :configs='configs' :data='queryData' size='small' inline>
       <el-button type='primary' :icon='Search' @click="loadData">查询</el-button>
       <el-button :icon='CirclePlus' @click="create">添加项目</el-button>
     </Query>
-    <CustomTable v-loading="loading" :columns='columns' :data='list'>
+    <CustomTable :columns='columns' :data='list'>
       <template #img='{row}'>
         <img :src="row.img" style="max-width: 40px;"/>
       </template>

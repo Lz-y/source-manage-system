@@ -1,9 +1,9 @@
 <template>
-  <div class="message-manage-page">
+  <div class="message-manage-page" v-loading="loading">
     <Query :configs='configs' :data='queryData' size='small' inline>
       <el-button type='primary' :icon='Search'>查询</el-button>
     </Query>
-    <CustomTable v-loading="loading" :columns='columns' :data='list'>
+    <CustomTable :columns='columns' :data='list'>
       <template #replyStatus='{row}'>
         <span :class="row.replyStatus === 0 ? 'no-reply' : 'available'">{{ReplyStatusOptions[row.replyStatus].label }}</span>
       </template>

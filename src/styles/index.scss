@@ -1,6 +1,7 @@
 @import './variable.scss';
 @import './element-plus.scss';
 @import './page.scss';
+@import './transition.scss';
 
 html, body{
   height: 100%;
@@ -132,21 +133,25 @@ html, body{
 .el-main {
   .page{
     overflow: hidden;
+    border-radius: 10px;
+    box-sizing: border-box;
+    width: 100%;
 
     & > [class$=-page] {
-      background-color: rgba($color: #fff, $alpha: 1);
-      padding: 0 10px 10px;
-      border-radius: 10px;
-      box-sizing: border-box;
+      background-color: #fff;
       overflow: hidden;
+      padding-left: 10px;
+      padding-right: 10px;
     }
   }
   .query{
-    // background-color: #f1f1f1;
+    background-color: #fff;
     padding: 0 15px;
   }
 
   .pagination{
-    margin-top: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background-color: #fff;
   }
 }

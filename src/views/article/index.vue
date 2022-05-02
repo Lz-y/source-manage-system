@@ -1,10 +1,10 @@
 <template>
-  <div class="article-manage-page">
+  <div class="article-manage-page" v-loading="loading">
     <Query :configs="configs" :data="formData" size='small' inline>
       <el-button type='primary' :icon='Search' @click="getAllArticle">查询</el-button>
       <el-button>导出文章数据</el-button>
     </Query>
-    <CustomTable :columns="columns" :data='tableData' v-loading="loading" stripe>
+    <CustomTable :columns="columns" :data='tableData' stripe>
       <template #url='{row}'>
         <img :src="row.url" alt="文章封面">
       </template>

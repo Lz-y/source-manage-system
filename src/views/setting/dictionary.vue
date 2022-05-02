@@ -1,10 +1,10 @@
 <template>
-  <div class="dictionary-setting-manage-page">
+  <div class="dictionary-setting-manage-page" v-loading="loading">
     <Query :configs='configs' :data='queryData' size='small' inline>
       <el-button type='primary' size="small" :icon='Search'>查询</el-button>
       <el-button size="small" :icon='CirclePlus' @click="addDict">新增字典</el-button>
     </Query>
-    <CustomTable v-loading="loading" :columns='columns' :data='list'>
+    <CustomTable :columns='columns' :data='list'>
       <template #status="{row}">
         <el-tag :type="row.status === 1 ? 'success': 'info'" size="small">{{row.status === 1 ? '启用': '禁用'}}</el-tag>
       </template>

@@ -1,10 +1,10 @@
 <template>
-  <div class="schedule-page">
+  <div class="schedule-page" v-loading="loading">
     <Query :configs='configs' :data='queryData' size='small' inline>
       <el-button type='primary' :icon='Search'>查询</el-button>
       <el-button :icon='CirclePlus' @click="createSchdule">添加计划</el-button>
     </Query>
-    <CustomTable v-loading="loading" :columns='columns' :data='list'>
+    <CustomTable :columns='columns' :data='list'>
       <template #spend="{row}">
         <span>{{row.relativeTime}}(从 {{row.spend[0]}} 开始)</span>
       </template>

@@ -4,13 +4,13 @@
       <el-backtop title="回到顶部" target='.el-main .page'>
         <Top />
       </el-backtop>
-      <router-view v-slot='{Component}'>
-        <div class="page">
+      <div class="page">
+        <router-view v-slot='{Component}'>
           <transition name="page" mode="out-in">
             <component :is="Component" />
           </transition>
-        </div>
-      </router-view>
+        </router-view>
+      </div>
     </el-scrollbar>
   </el-main>
 </template>

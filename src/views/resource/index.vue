@@ -1,10 +1,10 @@
 <template>
-  <div class="resource-manage-page">
+  <div class="resource-manage-page" v-loading="loading">
     <Query :configs='configs' :data='queryData' size='small' inline>
       <el-button type='primary' :icon='Search'>查询</el-button>
       <el-button :icon='CirclePlus' @click="modifyResource(0)">添加资源</el-button>
     </Query>
-    <CustomTable v-loading="loading" :columns='columns' :data='list'>
+    <CustomTable :columns='columns' :data='list'>
       <template #name='{row}'>
         <a :href="row.link" target="_blank">{{row.name}}</a>
       </template>
