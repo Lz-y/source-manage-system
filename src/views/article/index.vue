@@ -128,7 +128,7 @@ const encryptForm = reactive({
   encrypt: null,
   psw: null
 })
-const encryptForm$ = ref()
+const encryptForm$ = ref<InstanceType<typeof Query>>()
 const rules = reactive({
   psw: [
     {required: true, message: '请输入文章密码', trigger: 'blur'},
@@ -155,13 +155,13 @@ function showEncryptDislog (row: Article) {
   encryptForm.encrypt = row.encrypt === 0 ? 1 : 0 as any
 }
 function close () {
-  encryptForm$.value.form$.clearValidate()
+  encryptForm$.value!.form$!.clearValidate()
   Object.assign(encryptForm, {id: null, psw: null, encrypt: null})
   visible.value = false
 }
 async function confirm () {
   try {
-    const valid = await encryptForm$.value.form$.validate()
+    const valid = await encryptForm$.value!.form$!.validate()
     if (!valid) {
      return false
     }
