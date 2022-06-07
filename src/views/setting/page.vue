@@ -36,6 +36,7 @@ import { Search, InfoFilled, CirclePlus } from '@element-plus/icons-vue'
 import Query from '@/components/query.vue'
 import CustomTable from '@/components/table/index.vue'
 import Pagination from '@/components/pagination.vue'
+import {QConfig, ColumnProps} from '#/global'
 
 const configs = ref<Array<QConfig>>([
   { name: 'input', prop: 'title', label: '字典名称', attrs: {placeholder: '请输入字典名称', clearable: true}, },
