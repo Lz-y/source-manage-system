@@ -37,13 +37,19 @@
         </el-tooltip>
       </li>
       <li class="navbar-item">
-        <el-dropdown trigger="click" max-height="300px" @command="insertCodeBlank">
+        <el-dropdown
+          trigger="click"
+          max-height="300px"
+          @command="insertCodeBlank"
+        >
           <el-tooltip content="添加代码块">
             <svg-icon name="code"></svg-icon>
           </el-tooltip>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item v-for="item in languages" :command="item.key">{{item.language}}</el-dropdown-item>
+              <el-dropdown-item v-for="item in languages" :command="item.key">{{
+                item.language
+              }}</el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
@@ -63,30 +69,36 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ComponentInternalInstance, getCurrentInstance } from 'vue'
+import {
+  defineComponent,
+  ComponentInternalInstance,
+  getCurrentInstance,
+} from 'vue'
 import * as insert from './utils'
 
 export default defineComponent({
-  setup (props, ctx) {
-
+  setup(props, ctx) {
     const editor: ComponentInternalInstance = getCurrentInstance()!.parent!
 
-    function insertChar (symbol: '**' | '*' | '~~', txt: string) {
+    function insertChar(symbol: '**' | '*' | '~~', txt: string) {
       insert.insertChar(editor.refs!.write$ as HTMLTextAreaElement, symbol, txt)
     }
-    function insertList (symbol: '-' | '1.' | '- [x]', txt: string) {
+    function insertList(symbol: '-' | '1.' | '- [x]', txt: string) {
       insert.insertList(editor.refs!.write$ as HTMLTextAreaElement, symbol, txt)
     }
-    function insertLink () {
+    function insertLink() {
       insert.insertLink(editor.refs!.write$ as HTMLTextAreaElement)
     }
-    function insertImage () {
+    function insertImage() {
       insert.insertImage(editor.refs!.write$ as HTMLTextAreaElement)
     }
-    function insertCodeBlank (language: string) {
-      insert.insertCodeBlank(editor.refs!.write$ as HTMLTextAreaElement, language)
+    function insertCodeBlank(language: string) {
+      insert.insertCodeBlank(
+        editor.refs!.write$ as HTMLTextAreaElement,
+        language
+      )
     }
-    function insertTable () {
+    function insertTable() {
       insert.insertTable(editor.refs!.write$ as HTMLTextAreaElement)
     }
     return {
@@ -96,26 +108,26 @@ export default defineComponent({
       insertImage,
       insertCodeBlank,
       insertTable,
-      languages: insert.codeLanguage
+      languages: insert.codeLanguage,
     }
-  }
+  },
 })
 </script>
 
 <style lang="scss">
-.editor-navbar{
+.editor-navbar {
   line-height: 1.5;
 }
-.navbar-wrapper{
+.navbar-wrapper {
   list-style: none;
   padding-left: 0;
   margin-top: 0;
   margin-bottom: 10px;
-   .navbar-item{
-     text-align: center;
-     display: inline-block;
-     cursor: pointer;
-     padding-left: 0.5rem;
-   }
+  .navbar-item {
+    text-align: center;
+    display: inline-block;
+    cursor: pointer;
+    padding-left: 0.5rem;
+  }
 }
 </style>

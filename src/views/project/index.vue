@@ -1,6 +1,6 @@
 <template>
   <div class="project-manage-page" v-loading="loading">
-    <Query :configs='configs' :data='queryData' size='small' inline>
+    <Query :configs='configs' :data='queryData' inline>
       <el-button type='primary' :icon='Search' @click="loadData">查询</el-button>
       <el-button :icon='CirclePlus' @click="create">添加项目</el-button>
     </Query>
@@ -19,8 +19,8 @@
         <span :style="{color: row.status === 0 ? '#fdbc00' : '#0ac710'}">{{StatusOptions[row.status].label}}</span>
       </template>
       <template #operation='{row}'>
-        <el-button type='text' size="small" @click="edit(row)">编辑</el-button>
-        <el-button type='text' size="small" @click="view(row)">详情</el-button>
+        <el-button type='primary' size="small" @click="edit(row)" text>编辑</el-button>
+        <el-button type='primary' size="small" @click="view(row)" text>详情</el-button>
         <el-popconfirm confirm-button-text='确认'
           cancel-button-text='取消'
           :icon='InfoFilled'
@@ -28,7 +28,7 @@
           title="确认删除该项目？"
           @confirm='del(row._id)'>
           <template #reference>
-            <el-button type='text' size="small">删除</el-button>
+            <el-button type='danger' size="small" text>删除</el-button>
           </template>
         </el-popconfirm>
       </template>
@@ -50,12 +50,12 @@
           </el-upload>
         </el-col>
         <el-col :span="16">
-          <Query ref="projectForm$" :configs="projectForm" :data="curProject" label-width="80px" size="small"></Query>
+          <Query ref="projectForm$" :configs="projectForm" :data="curProject" label-width="80px"></Query>
         </el-col>
       </el-row>
       <template #footer>
-        <el-button size="small" @click="cancel">取消</el-button>
-        <el-button type="primary" size="small" @click="save">保存</el-button>
+        <el-button @click="cancel">取消</el-button>
+        <el-button type="primary" @click="save">保存</el-button>
       </template>
     </el-dialog>
   </div>
@@ -85,11 +85,11 @@ dayjs.locale('zh-cn')
 const StatusOptions = ref<Array<KeyMap>>([])
 const configs = ref<Array<QConfig>>([
   { name: 'input', prop: 'title', label: '项目名称', attrs: {placeholder: '请输入项目名称', clearable: true}, },
-  {
-    name: 'select', label: '类别', prop: 'classify',
-    attrs: {placeholder: '请选择类别', clearable: true},
-    options: []
-  },
+  // {
+  //   name: 'select', label: '类别', prop: 'classify',
+  //   attrs: {placeholder: '请选择类别', clearable: true},
+  //   options: []
+  // },
   {
     name: 'select', label: '状态', prop: 'status',
     attrs: {placeholder: '请选择状态', clearable: true},
@@ -98,7 +98,7 @@ const configs = ref<Array<QConfig>>([
 ])
 const queryData = reactive({
   name: null,
-  classify: null,
+  // classify: null,
   status: null,
 })
 
@@ -107,11 +107,11 @@ const columns = ref<Array<ColumnProps>>([
   { attrs: { prop: 'name', label: '项目名称' } },
   { attrs: { prop: 'img', label: '封面/图标', width: 100 }, _slot: true },
   { attrs: { prop: 'link', label: '链接'}, _slot: true },
-  { attrs: { prop: 'classify', label: '类别', width: 90 } },
+  // { attrs: { prop: 'classify', label: '类别', width: 90 } },
   { attrs: { prop: 'description', label: '描述' } },
-  { attrs: { prop: 'createTime', label: '创建时间', width: 165 } },
-  { attrs: { prop: 'runingTime', label: '运行时间', width: 100 } },
-  { attrs: { prop: 'status', label: '运行状态', width: 100 }, _slot: true},
+  { attrs: { prop: 'createTime', label: '创建时间', minWidth: 140 } },
+  { attrs: { prop: 'runingTime', label: '运行时间', minWidth: 100 } },
+  { attrs: { prop: 'status', label: '运行状态', minWidth: 100 }, _slot: true},
   { attrs: { prop: 'operation', label: '操作', width: 140 }, _slot: true },
 ])
 const list = ref<Array<Project>>([])
@@ -131,11 +131,11 @@ const projectForm = ref<Array<QConfig>>([
     name: 'input', label: '链接', prop: 'link',
     attrs: {placeholder: '请填写链接', clearable: true}
   },
-  {
-    name: 'select', label: '项目分类', prop: 'classify',
-    attrs: {placeholder: '请选择项目分类', clearable: true},
-    options: []
-  },
+  // {
+  //   name: 'select', label: '项目分类', prop: 'classify',
+  //   attrs: {placeholder: '请选择项目分类', clearable: true},
+  //   options: []
+  // },
   {
     name: 'select', label: '运行状态', prop: 'status',
     attrs: {placeholder: '请选择运行状态', clearable: true},
@@ -257,10 +257,10 @@ async function loadData() {
 async function getDicts () {
   try {
     const [classifies, status] = await Promise.all([getOneDict({type: 'SYS_TAGS'}), getOneDict({type: 'SYS_RUN_STATUS'})])
-    configs.value[1].options = classifies.data
-    configs.value[2].options = status.data
-    projectForm.value[2].options = classifies.data
-    projectForm.value[3].options = status.data
+    // configs.value[1].options = classifies.data
+    configs.value[1].options = status.data
+    // projectForm.value[2].options = classifies.data
+    projectForm.value[2].options = status.data
     StatusOptions.value = status.data
   } catch (error) {
     throw error

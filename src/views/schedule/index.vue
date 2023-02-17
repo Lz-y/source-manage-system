@@ -1,39 +1,63 @@
 <template>
   <div class="schedule-page" v-loading="loading">
-    <Query :configs='configs' :data='queryData' size='small' inline>
-      <el-button type='primary' :icon='Search'>查询</el-button>
-      <el-button :icon='CirclePlus' @click="createSchdule">添加计划</el-button>
+    <Query :configs="configs" :data="queryData" inline>
+      <el-button type="primary" :icon="Search" @click="loadData"
+        >查询</el-button
+      >
+      <el-button :icon="CirclePlus" @click="createSchdule">添加计划</el-button>
     </Query>
-    <CustomTable :columns='columns' :data='list'>
-      <template #spend="{row}">
-        <span>{{row.relativeTime}}(从 {{row.spend[0]}} 开始)</span>
+    <CustomTable :columns="columns" :data="list">
+      <template #spend="{ row }">
+        <span>{{ row.relativeTime }}(从 {{ row.spend[0] }} 开始)</span>
       </template>
-      <template #status='{row}'>
-        <span v-if="row.status === 2" class="available">{{statusOption[row.status].label}}</span>
-        <span v-else-if="row.status === 1" class="encrypted">{{statusOption[row.status].label}}</span>
-        <span v-else class="invalid">{{statusOption[row.status].label}}</span>
+      <template #status="{ row }">
+        <span v-if="row.status === 2" class="available">{{
+          statusOption[row.status].label
+        }}</span>
+        <span v-else-if="row.status === 1" class="encrypted">{{
+          statusOption[row.status].label
+        }}</span>
+        <span v-else class="invalid">{{ statusOption[row.status].label }}</span>
       </template>
-      <template #operation='{row}'>
-        <el-button type="text" size="small" @click="edit(row)">编辑</el-button>
-        <el-popconfirm confirm-button-text='确认'
-          cancel-button-text='取消'
-          :icon='InfoFilled'
-          icon-color='#fdbc00'
+      <template #operation="{ row }">
+        <el-button type="primary" size="small" @click="edit(row)" text
+          >编辑</el-button
+        >
+        <el-popconfirm
+          confirm-button-text="确认"
+          cancel-button-text="取消"
+          :icon="InfoFilled"
+          icon-color="#fdbc00"
           title="确认删除该计划？"
-          @confirm='remove(row._id)'>
+          @confirm="remove(row._id)"
+        >
           <template #reference>
-            <el-button type='text' size="small">删除</el-button>
+            <el-button type="danger" size="small" text>删除</el-button>
           </template>
         </el-popconfirm>
       </template>
     </CustomTable>
-    <Pagination :total='pageTotal' />
-    <el-dialog v-model="show" :title="title" width="30%" top="25vh" :close-on-click-modal="false">
-      <Query ref="scheduleForm$" :configs='schduleConfigs' :data='scheduleInfo' size='small' :label-width="100" style="max-width: 40vw;">
+    <Pagination :total="pageTotal" />
+    <el-dialog
+      v-model="show"
+      :title="title"
+      width="30%"
+      top="25vh"
+      :close-on-click-modal="false"
+    >
+      <Query
+        ref="scheduleForm$"
+        :configs="schduleConfigs"
+        :data="scheduleInfo"
+        :label-width="100"
+        style="max-width: 40vw"
+      >
       </Query>
       <template #footer>
-        <el-button size="small" @click.prevent="cancel">取消</el-button>
-        <el-button type='primary' size="small" @click.prevent="save">保存</el-button>
+        <el-button @click.prevent="cancel">取消</el-button>
+        <el-button type="primary" size="small" @click.prevent="save"
+          >保存</el-button
+        >
       </template>
     </el-dialog>
   </div>
@@ -41,48 +65,75 @@
 
 <script lang="ts">
 export default {
-  name: 'ScheduleManagePage'
+  name: 'ScheduleManagePage',
 }
 </script>
 <script setup lang="ts">
-import {ref, reactive, onMounted} from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import { Search, CirclePlus, InfoFilled } from '@element-plus/icons-vue'
 import { ElNotification } from 'element-plus'
 import dayjs from 'dayjs'
-import relativeTime from 'dayjs/plugin/relativeTime'
-import 'dayjs/locale/zh-cn'
+// import relativeTime from 'dayjs/plugin/relativeTime'
+// import 'dayjs/locale/zh-cn'
 
 import Query from '@/components/query.vue'
 import CustomTable from '@/components/table/index.vue'
 import Pagination from '@/components/pagination.vue'
 
-import {QConfig, ColumnProps, Schedule, KeyMap} from '#/global'
-import {getSchedules, putSchedule, createSchedule, deleteSchedule, getOneDict} from '@/api'
+import { QConfig, ColumnProps, Schedule, KeyMap } from '#/global'
+import {
+  getSchedules,
+  putSchedule,
+  createSchedule,
+  deleteSchedule,
+  getOneDict,
+} from '@/api'
 
-dayjs.extend(relativeTime)
-dayjs.locale('zh-cn')
+// dayjs.extend(relativeTime)
+// dayjs.locale('zh-cn')
 
 const statusOption = ref<Array<KeyMap>>([])
 
 const configs = ref<Array<QConfig>>([
-  {name: 'input', prop: 'name', label: '计划名称', attrs: {placeholder: '请输入计划名称', clearable: true}},
-  {name: 'date-picker', prop: 'spend', label: '所需时间', attrs: {type: 'daterange', rangeSeparator: '-',startPlaceholder: '开始日期', endPlaceholder: '截止日期'}},
-  {name: 'select', prop: 'status', label: '计划状态', options: [], attrs: {placeholder: '请选择计划状态', clearable: true}}
+  {
+    name: 'input',
+    prop: 'name',
+    label: '计划名称',
+    attrs: { placeholder: '请输入计划名称', clearable: true },
+  },
+  {
+    name: 'date-picker',
+    prop: 'spend',
+    label: '所需时间',
+    attrs: {
+      type: 'daterange',
+      rangeSeparator: '-',
+      startPlaceholder: '开始日期',
+      endPlaceholder: '截止日期',
+    },
+  },
+  {
+    name: 'select',
+    prop: 'status',
+    label: '计划状态',
+    options: [],
+    attrs: { placeholder: '请选择计划状态', clearable: true },
+  },
 ])
 
 const queryData = reactive({
   name: null,
   spend: [],
-  status: null
+  status: null,
 })
 
 const columns = ref<Array<ColumnProps>>([
   { attrs: { type: 'index', label: '#' } },
   { attrs: { prop: 'name', label: '名称' } },
-  { attrs: { prop: 'sequence', label: '优先级', width: 80 } },
-  { attrs: { prop: 'summary', label: '描述' } },
-  { attrs: { prop: 'spend', label: '所需时间', width: 200}, _slot: true },
-  { attrs: { prop: 'createTime', label: '创建时间', width: 170} },
+  { attrs: { prop: 'sequence', label: '优先级', width: 70 } },
+  { attrs: { prop: 'summary', label: '描述', minWidth: 140 } },
+  { attrs: { prop: 'spend', label: '所需时间', minWidth: 140 }, _slot: true },
+  { attrs: { prop: 'createTime', label: '创建时间' } },
   { attrs: { prop: 'status', label: '计划状态', width: 90 }, _slot: true },
   { attrs: { prop: 'operation', label: '操作', width: 120 }, _slot: true },
 ])
@@ -95,11 +146,43 @@ const show = ref<boolean>(false)
 const title = ref<string>('')
 
 const schduleConfigs = ref<Array<QConfig>>([
-  {name: 'input', prop: 'name', label: '计划名称', attrs: {placeholder: '请输入计划名称', clearable: true}},
-  {name: 'date-picker', prop: 'spend', label: '所需时间', attrs: { type: 'daterange', rangeSeparator: '-',startPlaceholder: '开始日期', endPlaceholder: '截止日期', valueFormat: 'YYYY-MM-DD'}},
-  {name: 'input-number', prop: 'sequence', label: '优先级', attrs: {precision: 0, step: 1, min: 0, 'controls-position': 'right'}},
-  {name: 'select', prop: 'status', label: '计划状态', options: [], attrs: {placeholder: '请选择计划状态', clearable: true}},
-  {name: 'input', prop: 'summary', label: '描述', attrs: {type: 'textarea', placeholder: '请输入计划描述'}}
+  {
+    name: 'input',
+    prop: 'name',
+    label: '计划名称',
+    attrs: { placeholder: '请输入计划名称', clearable: true },
+  },
+  {
+    name: 'date-picker',
+    prop: 'spend',
+    label: '所需时间',
+    attrs: {
+      type: 'daterange',
+      rangeSeparator: '-',
+      startPlaceholder: '开始日期',
+      endPlaceholder: '截止日期',
+      valueFormat: 'YYYY-MM-DD',
+    },
+  },
+  {
+    name: 'input-number',
+    prop: 'sequence',
+    label: '优先级',
+    attrs: { precision: 0, step: 1, min: 1, 'controls-position': 'right' },
+  },
+  {
+    name: 'select',
+    prop: 'status',
+    label: '计划状态',
+    options: [],
+    attrs: { placeholder: '请选择计划状态', clearable: true },
+  },
+  {
+    name: 'input',
+    prop: 'summary',
+    label: '描述',
+    attrs: { type: 'textarea', placeholder: '请输入计划描述' },
+  },
 ])
 
 const scheduleInfo = reactive<Schedule>({
@@ -107,7 +190,7 @@ const scheduleInfo = reactive<Schedule>({
   spend: [],
   sequence: 0,
   status: '0',
-  summary: ''
+  summary: '',
 })
 const scheduleForm$ = ref()
 const isEdit = ref<boolean>(false)
@@ -118,7 +201,7 @@ function createSchdule() {
 }
 
 function edit(row: Schedule) {
-  title.value = '计划详情 - ' + row.name
+  title.value = row.name + ' - 计划详情'
   show.value = true
   isEdit.value = true
   Object.assign(scheduleInfo, {
@@ -127,19 +210,18 @@ function edit(row: Schedule) {
     spend: row.spend,
     sequence: row.sequence,
     status: row.status + '',
-    summary: row.summary
+    summary: row.summary,
   })
 }
 
-
 async function remove(id: string) {
-  try{
-    const {msg} = await deleteSchedule(id)
+  try {
+    const { msg } = await deleteSchedule(id)
     ElNotification({
       title: 'success',
       message: msg,
       type: 'success',
-      duration: 3000
+      duration: 3000,
     })
     loadData()
   } catch (error) {
@@ -147,7 +229,7 @@ async function remove(id: string) {
   }
 }
 
-function cancel () {
+function cancel() {
   show.value = false
   isEdit.value = false
   scheduleForm$.value.form$.clearValidate()
@@ -156,12 +238,12 @@ function cancel () {
     spend: [],
     status: '0',
     sequence: 0,
-    summary: ''
+    summary: '',
   })
   scheduleInfo._id && delete scheduleInfo._id
 }
 
-async function save () {
+async function save() {
   try {
     let res
     if (isEdit.value) {
@@ -170,7 +252,7 @@ async function save () {
         summary: scheduleInfo.summary,
         spend: scheduleInfo.spend,
         status: scheduleInfo.status,
-        sequence: scheduleInfo.sequence
+        sequence: scheduleInfo.sequence,
       }
       res = await putSchedule(scheduleInfo._id, params)
     } else {
@@ -180,7 +262,7 @@ async function save () {
       title: 'success',
       message: res.msg,
       type: 'success',
-      duration: 3000
+      duration: 3000,
     })
     loadData()
   } catch (error) {
@@ -192,10 +274,15 @@ async function save () {
 async function loadData() {
   loading.value = true
   try {
-    const {result: {data, total}} = await getSchedules(queryData)
+    const {
+      result: { data, total },
+    } = await getSchedules(queryData)
     data.forEach((item: Schedule) => {
-      item.spend = item.spend.map(item => dayjs(item).format('YYYY-MM-DD'))
-      item.relativeTime = dayjs(item.spend[0]).to(item.spend[1], true)
+      const start = dayjs(item.spend[1])
+      const day = start.diff(item.spend[0], 'days')
+      item.relativeTime =
+        day % 7 ? `${day}天` : `${start.diff(item.spend[0], 'w')}周`
+      item.spend = item.spend.map((item) => dayjs(item).format('YYYY-MM-DD'))
       item.createTime = dayjs(item.createTime!).format('YYYY-MM-DD HH:mm:ss')
     })
     list.value = data
@@ -206,9 +293,9 @@ async function loadData() {
     loading.value = false
   }
 }
-async function getDicts () {
+async function getDicts() {
   try {
-    const {data}= await getOneDict({type: 'SYS_SCHEDULE_STATUS'})
+    const { data } = await getOneDict({ type: 'SYS_SCHEDULE_STATUS' })
     configs.value[2].options = data
     schduleConfigs.value[3].options = data
     statusOption.value = data

@@ -3,9 +3,10 @@ import {ElMessage, ElMessageBox} from 'element-plus'
 import {ResponseData} from '#/global'
 
 const serve = axios.create({
-  baseURL: import.meta.env.BASE_URL,
+  // baseURL: import.meta.env.BASE_URL,
   timeout: 10000,
 })
+serve.defaults.headers['common']['Content-Type'] = 'application/json'
 
 // request interceptor
 serve.interceptors.request.use(

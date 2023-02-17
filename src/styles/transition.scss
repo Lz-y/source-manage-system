@@ -1,15 +1,15 @@
 .page-enter-active,
 .page-leave-active{
   will-change: transform;
-  transition: all .3s ease;
+  transition: transform .3s ease-in;
 }
 
 .page-enter-form{
   opacity: 0;
-  transform: translateX(-20px);
+  transform: translateX(-100%);
 }
 
 .page-leave-to{
   opacity: 0;
-  transform: translateX(20px);
+  transform: translateX(100%);
 }

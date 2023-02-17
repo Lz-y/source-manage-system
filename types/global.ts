@@ -3,7 +3,15 @@ export interface AnyTypeObject {
 }
 // query form config props
 export interface QConfig {
-  name: 'input' | 'input-number' | 'select' | 'date-picker' | 'checkbox' | 'radio' | 'switch' | 'rate'
+  name:
+    | 'input'
+    | 'input-number'
+    | 'select'
+    | 'date-picker'
+    | 'checkbox'
+    | 'radio'
+    | 'switch'
+    | 'rate'
   prop: string
   label?: string
   options?: any[]
@@ -23,7 +31,7 @@ export interface ColumnProps {
   _slot?: boolean
 }
 // tab component config props
-export interface TabsProps{
+export interface TabsProps {
   name: string
   label: string
   component: any
@@ -41,7 +49,7 @@ export interface User {
   gender: 0 | 1 | null
   email: string
   avatar?: string
-  status: '0' | '1'
+  status: 0 | 1
   createTime?: string
 }
 
@@ -97,7 +105,7 @@ export interface Logs {
   requestTime: string
 }
 
-export interface Project{
+export interface Project {
   _id?: string
   name: string
   img?: string
@@ -119,9 +127,9 @@ export interface Dictionary {
   description?: string
 }
 
-export interface Todo {
+export interface State {
   name: string
-  finished: boolean
+  value: number
 }
 export interface Schedule {
   _id?: string
@@ -129,7 +137,7 @@ export interface Schedule {
   spend: string[]
   relativeTime?: string
   summary: string
-  status: '0' | '1' | '2' | null
+  status: 0 | 1 | 2
   sequence: number
   createTime?: string
 }

@@ -12,6 +12,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType, computed, defineAsyncComponent, onMounted, ref } from 'vue'
+import {TabsProps} from '#/global'
 
 export default defineComponent({
   props: {

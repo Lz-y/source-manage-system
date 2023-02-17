@@ -1,45 +1,35 @@
 <template>
-  <li class="todo-item">
-    <span class='check'>
-      <span class='check_inner' :class='item.finished ? "is-completed" : ""' @click='complete'>
-        <input class='check_origin' type='checkbox' :value='item.name'/>
-      </span>
-      <span>{{item.name}}</span>
-    </span>
-    <el-icon @click='removeTodo'><close /></el-icon>
+  <li class="todo-item" @click="complete">
+    <span class="name">{{ item.name }}</span>
+    <span class="time">{{ item.relativeTime }}</span>
+    <el-tag :type="item.status === 0 ? '' : 'warning'" size="small" round>{{
+      item.status === 0 ? '待办' : '进行中'
+    }}</el-tag>
   </li>
 </template>
 
 <script lang="ts">
-import {defineComponent, PropType} from 'vue'
-import {Close} from '@element-plus/icons-vue'
+import { defineComponent, PropType } from 'vue'
+import { Schedule } from '#/global'
 export default defineComponent({
   name: 'TodoItem',
-  components: {
-    Close
-  },
   props: {
     item: {
-      type: Object as PropType<Todo>,
-      required: true
+      type: Object as PropType<Schedule>,
+      required: true,
     },
     index: {
       type: Number,
-      default: 0
-    }
+      default: 0,
+    },
   },
-  setup (props, ctx) {
+  setup(props, ctx) {
     function complete() {
-      props.item.finished = !props.item.finished
       ctx.emit('complete', props.index, props.item)
-    }
-    function removeTodo() {
-      ctx.emit('remove-todo', props.index, props.item)
     }
     return {
       complete,
-      removeTodo
     }
-  }
+  },
 })
 </script>

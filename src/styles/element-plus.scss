@@ -1,6 +1,5 @@
-.el-form--inline{
-
-  .el-form-item{
+.el-form--inline {
+  .el-form-item {
     margin-top: 15px;
     margin-bottom: 15px;
   }
@@ -10,16 +9,21 @@
   color: $available;
 }
 
-.el-dialog{
-  &__body{
+.el-dialog {
+  &__body {
     padding: 15px;
   }
-  &__footer{
-
+  &__footer {
     padding-bottom: 10px;
   }
 }
 
+.el-button.is-text {
+  padding: 3px 5px;
+}
+.el-button.is-text + .el-button.is-text {
+  margin-left: 6px;
+}
 
 // .el-icon{
 //   vertical-align: middle;

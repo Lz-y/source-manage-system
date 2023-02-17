@@ -1,22 +1,36 @@
 <template>
   <div class="user-manage-page">
-    <Query :configs="configs" :data="formData" size="small" inline>
-      <el-button type="primary" :icon="Search">查询</el-button>
+    <Query :configs="configs" :data="formData" inline>
+      <el-button type="primary" :icon="Search" @click="loadData"
+        >查询</el-button
+      >
       <el-button :icon="CirclePlus" @click="addUser">添加用户</el-button>
     </Query>
     <CustomTable v-loading="loading" :columns="columns" :data="list">
       <template #gender="{ row }">
-        <span v-if="genderOptions[row.gender]">{{genderOptions[row.gender].label}}</span>
+        <span v-if="genderOptions[row.gender]">{{
+          genderOptions[row.gender].label
+        }}</span>
       </template>
       <template #status="{ row }">
-        <span :class="row.status === 0 ? 'invalid' : 'available'">{{statusOptions[row.status].label}}</span>
+        <span :class="row.status === 0 ? 'invalid' : 'available'">{{
+          statusOptions[row.status].label
+        }}</span>
       </template>
       <template #operation="{ row }">
-        <el-button type="text" size="small" @click="edit(row)">修改</el-button>
-        <el-popconfirm confirm-button-text="确认" cancel-button-text="取消" :icon="InfoFilled" icon-color="#fdbc00"
-          title="确定删除该用户？" @confirm="delUser(row._id)">
+        <el-button type="primary" size="small" @click="edit(row)" text
+          >修改</el-button
+        >
+        <el-popconfirm
+          confirm-button-text="确认"
+          cancel-button-text="取消"
+          :icon="InfoFilled"
+          icon-color="#fdbc00"
+          title="确定删除该用户？"
+          @confirm="delUser(row._id)"
+        >
           <template #reference>
-            <el-button type="text" size="small">删除</el-button>
+            <el-button type="danger" size="small" text>删除</el-button>
           </template>
         </el-popconfirm>
       </template>
@@ -30,20 +44,31 @@
             action=""
             :show-file-list="false"
             :on-success="uploadSuccess"
-            :before-upload="beforeUpload">
-              <img :src="curUser.avatar" alt="avatar" v-if="curUser.avatar" class="avatar" />
-              <el-icon v-else class="avatar-upload-icon">
-                <plus />
-              </el-icon>
+            :before-upload="beforeUpload"
+          >
+            <img
+              :src="curUser.avatar"
+              alt="avatar"
+              v-if="curUser.avatar"
+              class="avatar"
+            />
+            <el-icon v-else class="avatar-upload-icon">
+              <plus />
+            </el-icon>
           </el-upload>
         </el-col>
         <el-col :span="16">
-          <Query ref="userForm$" :configs="userConfig" :data="curUser" label-width="80px" size="small"></Query>
+          <Query
+            ref="userForm$"
+            :configs="userConfig"
+            :data="curUser"
+            label-width="80px"
+          ></Query>
         </el-col>
       </el-row>
       <template #footer>
-        <el-button size="small" @click="cancel">取消</el-button>
-        <el-button type="primary" size="small" @click="save">保存</el-button>
+        <el-button @click="cancel">取消</el-button>
+        <el-button type="primary" @click="save">保存</el-button>
       </template>
     </el-dialog>
   </div>
@@ -51,7 +76,7 @@
 
 <script lang="ts">
 export default {
-  name: 'UserManagePage'
+  name: 'UserManagePage',
 }
 </script>
 <script setup lang="ts">
@@ -64,38 +89,45 @@ import Query from '@/components/query.vue'
 import CustomTable from '@/components/table/index.vue'
 import pagination from '@/components/pagination.vue'
 
-import {QConfig, ColumnProps, User, KeyMap} from '#/global'
-import {getUsers, deleteUser, putUser, getOneDict} from '@/api'
+import { QConfig, ColumnProps, User, KeyMap } from '#/global'
+import { getUsers, deleteUser, putUser, getOneDict } from '@/api'
 
 const statusOptions = ref<Array<KeyMap>>([])
-const genderOptions = [{label: '女', value: 0}, {label: '男', value: 1}]
+const genderOptions = [
+  { label: '女', value: 0 },
+  { label: '男', value: 1 },
+]
 const configs = ref<Array<QConfig>>([
   {
-    name: 'input', label: '用户昵称', prop: 'name',
-    attrs: {placeholder: '请输入用户账号或昵称', clearable: true}
+    name: 'input',
+    label: '用户昵称',
+    prop: 'name',
+    attrs: { placeholder: '请输入用户账号或昵称', clearable: true },
   },
   {
-    name: 'select', label: '状态', prop: 'status',
-    attrs: {placeholder: '请选择用户状态', clearable: true},
-    options: []
-  }
+    name: 'select',
+    label: '状态',
+    prop: 'status',
+    attrs: { placeholder: '请选择用户状态', clearable: true },
+    options: [],
+  },
 ])
 
 const columns = ref<Array<ColumnProps>>([
-  { attrs: { type: "index", label: "#" } },
-  { attrs: { prop: "account", label: "账号" } },
-  { attrs: { prop: "nickName", label: "昵称" } },
-  { attrs: { prop: "gender", label: "性别" }, _slot: true },
-  { attrs: { prop: "email", label: "邮箱" } },
-  { attrs: { prop: "avatar", abel: "头像" } },
-  { attrs: { prop: "status", label: "状态", }, _slot: true },
-  { attrs: { prop: "createTime", label: "创建时间" } },
-  { attrs: { prop: "operation", label: "操作", width: 100 }, _slot: true },
+  { attrs: { type: 'index', label: '#' } },
+  { attrs: { prop: 'account', label: '账号' } },
+  { attrs: { prop: 'nickName', label: '昵称' } },
+  { attrs: { prop: 'gender', label: '性别' }, _slot: true },
+  { attrs: { prop: 'email', label: '邮箱' } },
+  { attrs: { prop: 'avatar', abel: '头像' } },
+  { attrs: { prop: 'status', label: '状态' }, _slot: true },
+  { attrs: { prop: 'createTime', label: '创建时间' } },
+  { attrs: { prop: 'operation', label: '操作', width: 120 }, _slot: true },
 ])
 
 const formData = reactive({
   name: null,
-  status: null
+  status: null,
 })
 
 const list = ref<Array<User>>([])
@@ -106,27 +138,37 @@ const show = ref<boolean>(false)
 const title = ref<string>()
 const userConfig = ref<Array<QConfig>>([
   {
-    name: 'input', label: '账号', prop: 'account',
-    attrs: {placeholder: '请输入用户账号', clearable: true, disabled: isEdit}
+    name: 'input',
+    label: '账号',
+    prop: 'account',
+    attrs: { placeholder: '请输入用户账号', clearable: true, disabled: isEdit },
   },
   {
-    name: 'input', label: '昵称', prop: 'nickName',
-    attrs: {placeholder: '请输入用户昵称', clearable: true}
+    name: 'input',
+    label: '昵称',
+    prop: 'nickName',
+    attrs: { placeholder: '请输入用户昵称', clearable: true },
   },
   {
-    name: 'select', label: '性别', prop: 'gender',
-    attrs: {placeholder: '请选择用户性别', clearable: true},
-    options: genderOptions
+    name: 'select',
+    label: '性别',
+    prop: 'gender',
+    attrs: { placeholder: '请选择用户性别', clearable: true },
+    options: genderOptions,
   },
   {
-    name: 'input', label: '邮箱', prop: 'email',
-    attrs: {placeholder: '请输入邮箱', clearable: true}
+    name: 'input',
+    label: '邮箱',
+    prop: 'email',
+    attrs: { placeholder: '请输入邮箱', clearable: true },
   },
   {
-    name: 'select', label: '状态', prop: 'status',
-    attrs: {placeholder: '请选择用户状态', clearable: true},
-    options: []
-  }
+    name: 'select',
+    label: '状态',
+    prop: 'status',
+    attrs: { placeholder: '请选择用户状态', clearable: true },
+    options: [],
+  },
 ])
 const userForm$ = ref()
 const curUser = reactive<User>({
@@ -135,15 +177,15 @@ const curUser = reactive<User>({
   gender: null,
   avatar: '',
   email: '',
-  status: '1'
+  status: 1,
 })
-function addUser (){
+function addUser() {
   show.value = true
   isEdit.value = false
   title.value = '添加用户'
 }
 
-function edit (row: User) {
+function edit(row: User) {
   show.value = true
   isEdit.value = true
   title.value = '编辑用户信息'
@@ -154,17 +196,17 @@ function edit (row: User) {
     avatar: row.avatar,
     gender: row.gender,
     email: row.email,
-    status: row.status
+    status: String(row.status),
   })
 }
-async function delUser (id: string) {
-  try{
-    const {msg} = await deleteUser(id)
+async function delUser(id: string) {
+  try {
+    const { msg } = await deleteUser(id)
     ElNotification({
       title: 'success',
       message: msg,
       type: 'success',
-      duration: 3000
+      duration: 3000,
     })
     loadData()
   } catch (error) {
@@ -172,7 +214,7 @@ async function delUser (id: string) {
   }
 }
 
-function cancel () {
+function cancel() {
   show.value = false
   userForm$.value.form$.clearValidate()
   Object.assign(curUser, {
@@ -181,23 +223,23 @@ function cancel () {
     avatar: '',
     gender: null,
     email: '',
-    status: '1'
+    status: '1',
   })
   curUser._id && delete curUser._id
 }
-async function save () {
+async function save() {
   try {
     let res
     if (isEdit.value) {
       res = await putUser(curUser._id!, curUser)
     } else {
-      res = await (curUser)
+      res = await curUser
     }
     ElNotification({
       title: 'success',
       message: res.msg,
       type: 'success',
-      duration: 3000
+      duration: 3000,
     })
     loadData()
   } catch (error) {
@@ -206,17 +248,15 @@ async function save () {
     cancel()
   }
 }
-function beforeUpload () {
-
-}
-function uploadSuccess () {
-
-}
+function beforeUpload() {}
+function uploadSuccess() {}
 
 async function loadData() {
   loading.value = true
   try {
-    const {result: {data, total}} = await getUsers(formData)
+    const {
+      result: { data, total },
+    } = await getUsers(formData)
     data.forEach((item: User) => {
       item.createTime = dayjs(item.createTime!).format('YYYY-MM-DD HH:mm:ss')
     })
@@ -228,9 +268,9 @@ async function loadData() {
     loading.value = false
   }
 }
-async function getDicts () {
+async function getDicts() {
   try {
-    const {data}= await getOneDict({type: 'SYS_STATUS'})
+    const { data } = await getOneDict({ type: 'SYS_STATUS' })
     configs.value[1].options = data
     userConfig.value[4].options = data
     statusOptions.value = data

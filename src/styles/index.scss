@@ -3,7 +3,9 @@
 @import './page.scss';
 @import './transition.scss';
 
-html, body{
+html,
+body,
+#app {
   height: 100%;
 }
 .svg-icon {
@@ -15,14 +17,15 @@ html, body{
   margin-right: 0.5rem;
 }
 
-.background{
+.background {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  // z-index: -1;
-  background-color: rgba(0, 0, 0, 0.25);
+  z-index: -1;
+  // background-image: url('@/assets/bg.jpg');
+  // background-color: rgba(0, 0, 0, 0.25);
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
@@ -44,7 +47,7 @@ html, body{
   background-color: transparent;
   border-right: none;
   // height: 100vh;
-  .menu-item{
+  .menu-item {
     text-decoration: none;
     color: #303133;
   }
@@ -59,7 +62,6 @@ html, body{
     }
   }
 }
-
 
 .el-container.is-vertical {
   margin-left: 210px;
@@ -76,9 +78,9 @@ html, body{
   background-color: rgba($color: #fff, $alpha: 0.5);
   overflow: hidden;
 }
-.nav{
-
-  &-left, &-right{
+.nav {
+  &-left,
+  &-right {
     display: flex;
     align-items: center;
   }
@@ -87,23 +89,23 @@ html, body{
   display: inline-block;
   overflow: hidden;
   margin-right: 10px;
-  &-icon{
+  &-icon {
     display: inline-block;
     vertical-align: middle;
     width: 20px;
     height: 20px;
 
-    &.is-active{
+    &.is-active {
       transform: rotate(180deg);
     }
   }
 }
 
-.notice{
+.notice {
   display: inline-block;
   overflow: hidden;
 
-  &-badge{
+  &-badge {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -113,43 +115,43 @@ html, body{
   }
 }
 
-.full-screen, .role-info{
+.full-screen,
+.role-info {
   display: inline-block;
   overflow: hidden;
   margin-left: 15px;
   cursor: pointer;
 }
 
-.full-screen{
+.full-screen {
   line-height: 1;
 }
 
 .role-info {
-  
-  .el-dropdown{
+  .el-dropdown {
     font-size: 18px;
   }
 }
 .el-main {
-  .page{
+  .page {
     overflow: hidden;
     border-radius: 10px;
     box-sizing: border-box;
     width: 100%;
 
-    & > [class$=-page] {
+    & > [class$='-page'] {
       background-color: #fff;
       overflow: hidden;
-      padding-left: 10px;
-      padding-right: 10px;
+      // padding-left: 10px;
+      // padding-right: 10px;
     }
   }
-  .query{
+  .query {
     background-color: #fff;
     padding: 0 15px;
   }
 
-  .pagination{
+  .pagination {
     padding-top: 10px;
     padding-bottom: 10px;
     background-color: #fff;

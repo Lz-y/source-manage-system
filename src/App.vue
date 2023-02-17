@@ -1,5 +1,5 @@
 <template>
-  <!-- <div class="background" style="background-image: url('../src/assets/bg.jpg');"></div> -->
+  <div class="background"></div>
   <router-view></router-view>
 </template>
 

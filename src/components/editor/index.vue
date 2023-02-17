@@ -2,7 +2,7 @@
   <div class="editor">
     <Navbar />
     <div class="editor-container">
-      <textarea ref="write$" id="write" :value='modelValue' @input="$emit('update:modelValue', $event.target!.value)" placeholder="请输入正文" @scroll="handleScroll(1, $event)"></textarea>
+      <textarea ref="write$" id="write" :value='modelValue' @input="$emit('update:modelValue', ($event.target as HTMLTextAreaElement).value)" placeholder="请输入正文" @scroll="handleScroll(1, $event)"></textarea>
       <div ref="render$" id="render" v-html='parseText' @scroll="handleScroll(2, $event)"></div>
     </div>
   </div>
@@ -11,7 +11,7 @@
 <script lang="ts">
 import { defineComponent, ref, computed, onMounted,onUnmounted, nextTick } from "vue"
 import MarkdownIt from 'markdown-it'
-import hljs from 'highlight.js'
+import hljs from 'highlight.js/lib/core'
 import 'highlight.js/styles/github.css'
 import Navbar from './navbar.vue'
 

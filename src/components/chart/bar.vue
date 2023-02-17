@@ -1,65 +1,67 @@
 <template>
-  <div class="bar-chart" style="width: 100%; height: 30vh;"></div>
+  <div class="bar-chart" style="width: 100%; height: 30vh"></div>
 </template>
 
 <script setup lang="ts">
-import {ECharts} from 'echarts'
+import { ECharts } from 'echarts'
 import echarts from './index'
-import { useEventListener, tryOnUnmounted, useTimeoutFn } from "@vueuse/core"
-import { onBeforeMount, onMounted, nextTick } from "vue"
+import { useEventListener, tryOnUnmounted, useTimeoutFn } from '@vueuse/core'
+import { onBeforeMount, onMounted, nextTick, PropType } from 'vue'
 
 let echartInstance: ECharts | null
-// const props = defineProps({
-//   index: {
-//     type: Number,
-//     default: 0
-//   }
-// })
+const props = defineProps({
+  data: {
+    type: Array as PropType<Array<number>>,
+  },
+})
 
 function initechartInstance() {
-  const echartDom = document.querySelector(".bar-chart")
+  const echartDom = document.querySelector('.bar-chart')
   if (!echartDom) return
+  if (echartInstance) {
+    echartInstance.dispose()
+  }
   // @ts-ignore
   echartInstance = echarts.init(echartDom)
   echartInstance!.clear() //清除旧画布 重新渲染
   echartInstance!.setOption({
     tooltip: {
-      trigger: "axis",
+      trigger: 'axis',
       axisPointer: {
-        type: "shadow"
-      }
+        type: 'shadow',
+      },
     },
     grid: {
-      bottom: "10%",
-      height: "75%",
-      containLabel: true
+      bottom: '10%',
+      height: '75%',
+      containLabel: true,
     },
     xAxis: [
       {
-        type: "category",
+        type: 'category',
         axisTick: {
-          alignWithLabel: true
+          alignWithLabel: true,
         },
         axisLabel: {
           interval: 0,
-          width: "70",
-          overflow: "truncate"
+          width: '70',
+          overflow: 'truncate',
         },
-        data: ["open_issues", "forks", "watchers", "star"]
-      }
+        data: ['open_issues', 'forks', 'watchers', 'star'],
+      },
     ],
     yAxis: [
       {
-        type: "value"
-      }
+        type: 'value',
+      },
     ],
     series: [
       {
-        name: "GitHub信息",
-        type: "bar",
-        data: [60, 204, 1079, 1079]
-      }
-    ]
+        name: 'GitHub信息',
+        type: 'bar',
+        data: [60, 204, 1079, 1079],
+      },
+    ],
   })
 }
 
@@ -71,7 +73,7 @@ onBeforeMount(() => {
 
 onMounted(() => {
   nextTick(() => {
-    useEventListener("resize", () => {
+    useEventListener('resize', () => {
       if (!echartInstance) return
       useTimeoutFn(() => {
         echartInstance!.resize()
